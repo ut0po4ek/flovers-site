@@ -1,0 +1,129 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { siteConfig } from '../config/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  canonical?: string;
+}
+
+const {
+  title = `${siteConfig.name} — ${siteConfig.description}`,
+  description = siteConfig.description,
+  ogImage = siteConfig.seo.ogImage,
+  canonical = Astro.url.href,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={siteConfig.locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Anti-flash: resolve theme and add .js class before first paint -->
+    <script is:inline>
+      (function () {
+        document.documentElement.classList.add('js');
+        var key = 'flovers-theme';
+        var saved = 'system';
+        try {
+          saved = localStorage.getItem(key) || 'system';
+        } catch (_) {
+          saved = 'system';
+        }
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var resolved = saved === 'system' ? (prefersDark ? 'dark' : 'light') : saved;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = saved;
+      })();
+    </script>
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={siteConfig.ogLocale} />
+    <meta property="og:site_name" content={siteConfig.name} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Preconnect for Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- View Transitions for smooth page navigation -->
+    <ClientRouter fallback="none" />
+  </head>
+  <body>
+    <slot />
+
+    <script>
+      function initReveal() {
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (reduced) {
+          document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible', 'is-visible'));
+          document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('is-visible'));
+          return;
+        }
+
+        const dataRevealEls = document.querySelectorAll('[data-reveal]:not(.is-visible)');
+        const newObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const el = entry.target as HTMLElement;
+                const delay = el.dataset.revealDelay;
+                if (delay) {
+                  el.style.transitionDelay = delay + 'ms';
+                }
+                el.classList.add('is-visible');
+                newObserver.unobserve(el);
+              }
+            });
+          },
+          { threshold: 0.08, rootMargin: '0px 0px -50px 0px' }
+        );
+        dataRevealEls.forEach(el => newObserver.observe(el));
+
+        const revealElements = document.querySelectorAll('.reveal:not(.visible):not(.is-visible)');
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible', 'is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+        );
+        revealElements.forEach((el) => observer.observe(el));
+      }
+
+      initReveal();
+      document.addEventListener('astro:page-load', initReveal);
+    </script>
+  </body>
+</html>

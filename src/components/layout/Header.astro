@@ -1,0 +1,561 @@
+---
+import { siteConfig } from '../../config/site';
+const navLinks = siteConfig.nav;
+---
+
+<header id="site-header" class="site-header" data-state="hero" aria-label="Шапка сайта">
+  <div class="container-site">
+    <div class="flex items-center justify-between" style="height: var(--header-h, 72px);">
+
+      <!-- Logo -->
+      <a
+        href="/"
+        class="header-logo text-sm font-medium tracking-[0.15em] uppercase"
+        aria-label={`${siteConfig.name} — на главную`}
+      >
+        {siteConfig.shortName}
+      </a>
+
+      <!-- Desktop nav -->
+      <nav aria-label="Основная навигация" class="hidden lg:flex items-center gap-8">
+        {navLinks.map((link) => (
+          <a href={link.href} class="header-nav-link">
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- CTA + Burger -->
+      <div class="flex items-center gap-4">
+        <a
+          href={siteConfig.cta.href}
+          class="header-cta hidden md:inline-flex items-center gap-2 px-5 py-2.5 text-xs font-medium tracking-widest uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+        >
+          {siteConfig.cta.label}
+        </a>
+
+        <!-- Theme switcher -->
+        <div class="theme-switcher relative">
+          <button
+            id="theme-btn"
+            class="theme-btn w-10 h-10 flex items-center justify-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+            aria-label="Тема оформления"
+            aria-expanded="false"
+            aria-haspopup="true"
+            title="Переключить тему"
+          >
+            <!-- Sun icon (light) -->
+            <svg class="theme-icon-light hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <!-- Moon icon (dark) -->
+            <svg class="theme-icon-dark hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <!-- Monitor icon (system) -->
+            <svg class="theme-icon-system hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </button>
+
+          <!-- Dropdown menu -->
+          <div
+            id="theme-menu"
+            role="menu"
+            aria-label="Выбор темы"
+            class="theme-menu absolute right-0 top-full mt-2 hidden"
+          >
+            <button role="menuitem" data-theme-option="light" class="theme-menu-item flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium tracking-widest uppercase text-left">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+              Светлая
+            </button>
+            <button role="menuitem" data-theme-option="dark" class="theme-menu-item flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium tracking-widest uppercase text-left">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+              Тёмная
+            </button>
+            <button role="menuitem" data-theme-option="system" class="theme-menu-item flex items-center gap-3 w-full px-4 py-2.5 text-xs font-medium tracking-widest uppercase text-left">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+              Системная
+            </button>
+          </div>
+        </div>
+
+        <button
+          id="burger-btn"
+          class="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-[5px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded-sm"
+          aria-label="Открыть меню"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <span class="burger-line block w-6 h-px"></span>
+          <span class="burger-line block w-4 h-px"></span>
+          <span class="burger-line block w-6 h-px"></span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<!-- Mobile fullscreen menu -->
+<div
+  id="mobile-menu"
+  class="mobile-menu fixed inset-0 z-40 flex flex-col items-start justify-center px-8"
+  aria-hidden="true"
+  role="dialog"
+  aria-label="Мобильное меню"
+>
+  <button
+    id="close-menu"
+    class="absolute top-6 right-6 w-10 h-10 flex items-center justify-center text-[var(--color-bg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded-sm"
+    aria-label="Закрыть меню"
+  >
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+      <line x1="1" y1="1" x2="19" y2="19"/>
+      <line x1="19" y1="1" x2="1" y2="19"/>
+    </svg>
+  </button>
+
+  <nav aria-label="Мобильная навигация" class="flex flex-col gap-6 w-full">
+    {navLinks.map((link, i) => (
+      <a
+        href={link.href}
+        class="mobile-nav-link text-[var(--color-bg)] text-4xl font-light tracking-tight hover:text-[var(--color-accent)]"
+        style={`--delay: ${i * 60}ms`}
+        data-close-menu
+      >
+        {link.label}
+      </a>
+    ))}
+
+      <!-- Mobile theme switcher -->
+      <div class="mobile-theme-switcher flex flex-wrap gap-3 pt-4">
+        <button data-mobile-theme="light" class="mobile-theme-btn flex items-center gap-2 px-4 py-3 text-xs font-medium tracking-widest uppercase border border-[#3a3630] text-[var(--color-bg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]" aria-label="Светлая тема">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          Светлая
+        </button>
+        <button data-mobile-theme="dark" class="mobile-theme-btn flex items-center gap-2 px-4 py-3 text-xs font-medium tracking-widest uppercase border border-[#3a3630] text-[var(--color-bg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]" aria-label="Тёмная тема">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          Тёмная
+        </button>
+        <button data-mobile-theme="system" class="mobile-theme-btn flex items-center gap-2 px-4 py-3 text-xs font-medium tracking-widest uppercase border border-[#3a3630] text-[var(--color-bg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]" aria-label="Системная тема">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Системная
+        </button>
+      </div>
+  </nav>
+
+  <div class="mt-12">
+    <a
+      href={siteConfig.cta.href}
+      class="mobile-nav-link mobile-cta inline-flex items-center gap-2 border border-[#3a3630] text-[var(--color-bg)] px-6 py-3.5 text-xs font-medium tracking-widest uppercase hover:border-[var(--color-bg)]"
+      style="--delay: 360ms"
+      data-close-menu
+    >
+      {siteConfig.cta.label}
+    </a>
+  </div>
+
+  <div class="absolute bottom-8 left-8 right-8 flex justify-between items-end">
+    <p class="text-[var(--color-fg-muted)] text-xs tracking-widest uppercase">{siteConfig.name}</p>
+    <p class="text-[var(--color-fg-muted)] text-xs">© {siteConfig.year}</p>
+  </div>
+</div>
+
+<style>
+  /* ─── Glass token system ─────────────────────────────── */
+  .site-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+
+    /* Safari + standard backdrop-filter */
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    backdrop-filter: blur(18px) saturate(150%);
+
+    /* Glass tokens driven by CSS theme variables */
+    --h-bg:     var(--glass-hero-bg);
+    --h-border: var(--glass-hero-border);
+    --h-text:   var(--glass-hero-text);
+    --h-text-m: var(--glass-hero-text-m);
+    --h-cta-bd: var(--glass-hero-cta-bd);
+
+    background: var(--h-bg);
+    border-bottom: 1px solid var(--h-border);
+    color: var(--h-text);
+
+    transition:
+      background-color 420ms cubic-bezier(0.4, 0, 0.2, 1),
+      border-color     420ms cubic-bezier(0.4, 0, 0.2, 1),
+      color            420ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow       420ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ─── Scrolled / light-page state ───────────────────── */
+  .site-header[data-state="scrolled"] {
+    --h-bg:     var(--glass-scroll-bg);
+    --h-border: var(--glass-scroll-border);
+    --h-text:   var(--glass-scroll-text);
+    --h-text-m: var(--glass-scroll-text-m);
+    --h-cta-bd: var(--glass-scroll-cta-bd);
+    box-shadow: 0 1px 24px rgba(0,0,0,0.06);
+  }
+
+  /* Fallback: solid background for browsers without backdrop-filter support */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .site-header {
+      background: rgba(18, 18, 16, 0.95) !important;
+    }
+    .site-header[data-state="scrolled"] {
+      background: rgba(246, 243, 237, 0.97) !important;
+    }
+    [data-theme="dark"] .site-header,
+    [data-theme="dark"] .site-header[data-state="scrolled"] {
+      background: rgba(10, 10, 9, 0.97) !important;
+    }
+  }
+
+  /* ─── Logo ───────────────────────────────────────────── */
+  .header-logo {
+    color: var(--h-text);
+    transition: color 420ms ease, opacity 200ms ease;
+  }
+  .header-logo:hover { opacity: 0.7; }
+
+  /* ─── Nav links ──────────────────────────────────────── */
+  .header-nav-link {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--h-text-m);
+    position: relative;
+    padding-bottom: 2px;
+    transition: color 200ms ease;
+  }
+  .header-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 100%;
+    height: 1px;
+    background: var(--color-accent);
+    transition: right 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .header-nav-link:hover { color: var(--h-text); }
+  .header-nav-link:hover::after { right: 0; }
+
+  /* ─── CTA button ─────────────────────────────────────── */
+  .header-cta {
+    color: var(--h-text);
+    border: 1px solid var(--h-cta-bd);
+    transition:
+      color        300ms ease,
+      border-color 300ms ease,
+      background   300ms ease;
+  }
+  .header-cta:hover {
+    background: rgba(181, 164, 138, 0.15);
+    border-color: var(--color-accent);
+    color: var(--h-text);
+  }
+
+  /* ─── Burger lines ───────────────────────────────────── */
+  .burger-line {
+    background: var(--h-text);
+    transition: background 420ms ease;
+  }
+
+  /* ─── Mobile menu ────────────────────────────────────── */
+  .mobile-menu {
+    background: var(--color-bg-dark);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 400ms cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 400ms;
+    /* iOS safe area — prevents content going behind notch/home indicator */
+    padding-top: max(2rem, env(safe-area-inset-top));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+  .mobile-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-nav-link {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition:
+      opacity   500ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms),
+      transform 500ms cubic-bezier(0.16, 1, 0.3, 1) var(--delay, 0ms),
+      color 200ms ease;
+  }
+  .mobile-menu.is-open .mobile-nav-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── Theme button ───────────────────────────────── */
+  .theme-btn {
+    color: var(--h-text-m);
+    transition: color 200ms ease, opacity 200ms ease;
+  }
+  .theme-btn:hover { color: var(--h-text); opacity: 0.9; }
+
+  /* ─── Theme dropdown menu ────────────────────────── */
+  .theme-menu {
+    min-width: 10rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    z-index: 100;
+  }
+  .theme-menu-item {
+    color: var(--color-fg-muted);
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+  .theme-menu-item:hover,
+  .theme-menu-item:focus {
+    background-color: var(--color-bg-warm);
+    color: var(--color-fg);
+    outline: none;
+  }
+  .theme-menu-item[data-active="true"] {
+    color: var(--color-accent);
+  }
+
+  /* ─── Mobile theme switcher ──────────────────────── */
+  .mobile-theme-btn {
+    transition: border-color 200ms ease, background-color 200ms ease;
+  }
+  .mobile-theme-btn[data-active="true"] {
+    border-color: var(--color-bg);
+    background-color: rgba(255,255,255,0.08);
+  }
+  .mobile-theme-btn:hover {
+    border-color: var(--color-accent);
+  }
+</style>
+
+<script>
+  const header   = document.getElementById('site-header')!;
+  const burgerBtn  = document.getElementById('burger-btn')!;
+  const closeBtn   = document.getElementById('close-menu')!;
+  const mobileMenu = document.getElementById('mobile-menu')!;
+  let menuOpen = false;
+
+  /* ─── Header state machine ───────────────────────────── */
+  // state is always either "hero" or "scrolled" — never transparent
+  function applyState(state: 'hero' | 'scrolled') {
+    header.dataset.state = state;
+  }
+
+  function resolveState() {
+    const heroEl = document.getElementById('hero');
+    if (!heroEl) {
+      // pages without hero: always scrolled/light glass
+      applyState('scrolled');
+      return;
+    }
+    const heroBottom = heroEl.getBoundingClientRect().bottom;
+    // threshold: header height ~72px
+    applyState(heroBottom < 72 ? 'scrolled' : 'hero');
+  }
+
+  // Set correct state immediately on load (before any scroll)
+  resolveState();
+
+  window.addEventListener('scroll', resolveState, { passive: true });
+
+  // After View Transitions re-run setup
+  document.addEventListener('astro:page-load', () => {
+    resolveState();
+  });
+
+  /* ─── Mobile menu ────────────────────────────────────── */
+  function openMenu() {
+    menuOpen = true;
+    mobileMenu.classList.add('is-open');
+    mobileMenu.setAttribute('aria-hidden', 'false');
+    burgerBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    menuOpen = false;
+    mobileMenu.classList.remove('is-open');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+    burgerBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  burgerBtn.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
+  closeBtn.addEventListener('click', closeMenu);
+  mobileMenu.querySelectorAll('[data-close-menu]').forEach(el =>
+    el.addEventListener('click', closeMenu)
+  );
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && menuOpen) closeMenu();
+  });
+
+  /* ─── Theme system ───────────────────────────────── */
+  const STORAGE_KEY = 'flovers-theme';
+  const VALID_PREFS: ThemePreference[] = ['light', 'dark', 'system'];
+
+  type ThemePreference = 'light' | 'dark' | 'system';
+
+  // Module-level state (survives View Transitions)
+  let themeMenuOpen = false;
+
+  function getStoredPreference(): ThemePreference {
+    try {
+      return (localStorage.getItem(STORAGE_KEY) as ThemePreference) || 'system';
+    } catch {
+      return 'system';
+    }
+  }
+
+  function resolveTheme(pref: ThemePreference): 'light' | 'dark' {
+    if (pref === 'system') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return pref;
+  }
+
+  function applyTheme(preference: ThemePreference) {
+    if (!VALID_PREFS.includes(preference)) return;
+
+    try {
+      localStorage.setItem(STORAGE_KEY, preference);
+    } catch { /* Safari private mode — ignore */ }
+
+    const resolved = resolveTheme(preference);
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced) {
+      document.documentElement.classList.add('theme-transitioning');
+      setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 300);
+    }
+
+    document.documentElement.dataset.theme = resolved;
+    document.documentElement.dataset.themePreference = preference;
+    updateThemeUI(preference);
+  }
+
+  function updateThemeUI(preference: ThemePreference) {
+    // Desktop icon
+    document.querySelectorAll<HTMLElement>('.theme-icon-light, .theme-icon-dark, .theme-icon-system').forEach(el => {
+      el.classList.add('hidden');
+    });
+    const activeIcon = document.querySelector<HTMLElement>(`.theme-icon-${preference}`);
+    activeIcon?.classList.remove('hidden');
+
+    // Desktop menu items active state
+    document.querySelectorAll<HTMLElement>('.theme-menu-item').forEach(btn => {
+      btn.dataset.active = String(btn.dataset.themeOption === preference);
+    });
+
+    // Mobile buttons active state
+    document.querySelectorAll<HTMLElement>('.mobile-theme-btn').forEach(btn => {
+      btn.dataset.active = String(btn.dataset.mobileTheme === preference);
+    });
+  }
+
+  // DOM-bound listeners — re-run after each View Transition
+  function initThemeListeners() {
+    const themeBtn = document.getElementById('theme-btn');
+    const themeMenu = document.getElementById('theme-menu');
+    if (!themeBtn || !themeMenu) return; // guard: elements may not exist on every page
+
+    function openThemeMenu() {
+      themeMenuOpen = true;
+      themeMenu!.classList.remove('hidden');
+      themeBtn!.setAttribute('aria-expanded', 'true');
+      //const firstItem = themeMenu!.querySelector<HTMLElement>('[role="menuitem"]');
+      //firstItem?.focus();
+    }
+
+    function closeThemeMenu() {
+      themeMenuOpen = false;
+      themeMenu!.classList.add('hidden');
+      themeBtn!.setAttribute('aria-expanded', 'false');
+    }
+
+    themeBtn.addEventListener('click', () => {
+      themeMenuOpen ? closeThemeMenu() : openThemeMenu();
+    });
+
+    // Keyboard navigation within menu
+    themeMenu.addEventListener('keydown', (e: KeyboardEvent) => {
+      const items = Array.from(themeMenu!.querySelectorAll<HTMLElement>('[role="menuitem"]'));
+      const current = document.activeElement as HTMLElement;
+      const idx = items.indexOf(current);
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        items[(idx + 1) % items.length]?.focus();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        items[(idx - 1 + items.length) % items.length]?.focus();
+      } else if (e.key === 'Escape') {
+        closeThemeMenu();
+        themeBtn!.focus();
+      }
+    });
+
+    // Desktop menu item clicks
+    themeMenu.querySelectorAll<HTMLElement>('[data-theme-option]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        applyTheme(btn.dataset.themeOption as ThemePreference);
+        closeThemeMenu();
+      });
+    });
+
+    // Mobile theme buttons
+    document.querySelectorAll<HTMLElement>('[data-mobile-theme]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        applyTheme(btn.dataset.mobileTheme as ThemePreference);
+      });
+    });
+  }
+
+  // Click-outside: stays module-scope (document persists), uses module-level themeMenuOpen
+  document.addEventListener('click', (e) => {
+    if (!themeMenuOpen) return;
+    const btn = document.getElementById('theme-btn');
+    const menu = document.getElementById('theme-menu');
+    if (btn && menu && !btn.contains(e.target as Node) && !menu.contains(e.target as Node)) {
+      themeMenuOpen = false;
+      menu.classList.add('hidden');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // OS theme change listener (for 'system' preference)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (getStoredPreference() === 'system') {
+      applyTheme('system');
+    }
+  });
+
+  // Initialize: called on first load AND after each View Transition
+  function initThemeUI() {
+    updateThemeUI(getStoredPreference());
+    initThemeListeners(); // rebind DOM listeners
+  }
+  initThemeUI();
+  document.addEventListener('astro:page-load', initThemeUI);
+</script>

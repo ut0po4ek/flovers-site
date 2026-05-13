@@ -1,0 +1,473 @@
+@import 'tailwindcss';
+
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════ */
+@layer base {
+  /* Light theme (default) */
+  :root,
+  [data-theme="light"] {
+    --color-bg:          #fbf6f1;
+    --color-bg-warm:     #f3e8e1;
+    --color-bg-dark:     #261818;
+    --color-surface:     #fffaf6;
+    --color-fg:          #261818;
+    --color-fg-muted:    rgba(38, 24, 24, 0.68);
+    --color-fg-subtle:   rgba(38, 24, 24, 0.45);
+    --color-accent:      #e9a8c7;
+    --color-accent-dark: #8a2f48;
+    --color-border:      rgba(80, 45, 45, 0.14);
+    --color-border-dark: rgba(38, 24, 24, 0.20);
+
+    --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --btn-primary-bg:           #261818;
+    --btn-primary-text:         #fffaf6;
+    --btn-primary-border:       #261818;
+    --btn-primary-hover-bg:     #4a2828;
+    --btn-primary-hover-text:   #fffaf6;
+    --btn-primary-hover-border: #4a2828;
+
+    --btn-secondary-bg:           transparent;
+    --btn-secondary-text:         #261818;
+    --btn-secondary-border:       rgba(38, 24, 24, 0.30);
+    --btn-secondary-hover-bg:     rgba(38, 24, 24, 0.06);
+    --btn-secondary-hover-text:   #261818;
+    --btn-secondary-hover-border: rgba(38, 24, 24, 0.55);
+
+    --btn-accent-bg:           #e9a8c7;
+    --btn-accent-text:         #261818;
+    --btn-accent-border:       #e9a8c7;
+    --btn-accent-hover-bg:     #d990b4;
+    --btn-accent-hover-text:   #261818;
+    --btn-accent-hover-border: #d990b4;
+
+    --btn-ghost-bg:           transparent;
+    --btn-ghost-text:         rgba(38, 24, 24, 0.55);
+    --btn-ghost-border:       transparent;
+    --btn-ghost-hover-bg:     rgba(38, 24, 24, 0.05);
+    --btn-ghost-hover-text:   #261818;
+    --btn-ghost-hover-border: transparent;
+
+    --glass-hero-bg:       rgba(12, 20, 15, 0.60);
+    --glass-hero-border:   rgba(255, 255, 255, 0.08);
+    --glass-hero-text:     rgba(255, 244, 238, 0.92);
+    --glass-hero-text-m:   rgba(255, 244, 238, 0.58);
+    --glass-hero-cta-bd:   rgba(244, 179, 210, 0.45);
+    --glass-scroll-bg:     rgba(251, 246, 241, 0.90);
+    --glass-scroll-border: rgba(38, 24, 24, 0.10);
+    --glass-scroll-text:   rgba(38, 24, 24, 0.88);
+    --glass-scroll-text-m: rgba(38, 24, 24, 0.55);
+    --glass-scroll-cta-bd: rgba(38, 24, 24, 0.35);
+  }
+
+  /* Dark theme */
+  [data-theme="dark"] {
+    --color-bg:          #101915;
+    --color-bg-warm:     #5a1f32;
+    --color-bg-dark:     #080e0a;
+    --color-surface:     #16221d;
+    --color-fg:          #fff4ee;
+    --color-fg-muted:    rgba(255, 244, 238, 0.72);
+    --color-fg-subtle:   rgba(255, 244, 238, 0.48);
+    --color-accent:      #f4b3d2;
+    --color-accent-dark: #b94d6a;
+    --color-border:      rgba(255, 244, 238, 0.16);
+    --color-border-dark: rgba(255, 244, 238, 0.10);
+
+    --btn-primary-bg:           #f4b3d2;
+    --btn-primary-text:         #321221;
+    --btn-primary-border:       #f4b3d2;
+    --btn-primary-hover-bg:     #f9cfe3;
+    --btn-primary-hover-text:   #321221;
+    --btn-primary-hover-border: #f9cfe3;
+
+    --btn-secondary-bg:           rgba(255, 244, 238, 0.06);
+    --btn-secondary-text:         #fff4ee;
+    --btn-secondary-border:       rgba(255, 244, 238, 0.28);
+    --btn-secondary-hover-bg:     rgba(255, 244, 238, 0.12);
+    --btn-secondary-hover-text:   #fff4ee;
+    --btn-secondary-hover-border: rgba(255, 244, 238, 0.45);
+
+    --btn-accent-bg:           #f4b3d2;
+    --btn-accent-text:         #321221;
+    --btn-accent-border:       #f4b3d2;
+    --btn-accent-hover-bg:     #f9cfe3;
+    --btn-accent-hover-text:   #321221;
+    --btn-accent-hover-border: #f9cfe3;
+
+    --btn-ghost-bg:           transparent;
+    --btn-ghost-text:         rgba(255, 244, 238, 0.60);
+    --btn-ghost-border:       transparent;
+    --btn-ghost-hover-bg:     rgba(255, 244, 238, 0.08);
+    --btn-ghost-hover-text:   #fff4ee;
+    --btn-ghost-hover-border: transparent;
+
+    --card-bg:     rgba(255, 244, 238, 0.045);
+    --card-border: rgba(255, 244, 238, 0.12);
+    --card-text:   #fff4ee;
+    --card-muted:  rgba(255, 244, 238, 0.70);
+
+    --glass-hero-bg:       rgba(10, 15, 12, 0.65);
+    --glass-hero-border:   rgba(255, 255, 255, 0.08);
+    --glass-hero-text:     rgba(255, 244, 238, 0.92);
+    --glass-hero-text-m:   rgba(255, 244, 238, 0.58);
+    --glass-hero-cta-bd:   rgba(244, 179, 210, 0.45);
+    --glass-scroll-bg:     rgba(16, 25, 21, 0.92);
+    --glass-scroll-border: rgba(255, 244, 238, 0.10);
+    --glass-scroll-text:   rgba(255, 244, 238, 0.92);
+    --glass-scroll-text-m: rgba(255, 244, 238, 0.60);
+    --glass-scroll-cta-bd: rgba(255, 244, 238, 0.35);
+  }
+
+  /* Smooth theme switching — only active during the 300ms transition window */
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition:
+      background-color 240ms ease,
+      color            240ms ease,
+      border-color     240ms ease,
+      box-shadow       240ms ease !important;
+  }
+
+  /* Disable transition animation when user prefers reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    html.theme-transitioning *,
+    html.theme-transitioning *::before,
+    html.theme-transitioning *::after {
+      transition: none !important;
+    }
+  }
+
+  html {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body { overflow-x: hidden; }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  p { line-height: 1.7; }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; height: auto; display: block; }
+  button { cursor: pointer; }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   LAYOUT UTILITIES
+═══════════════════════════════════════════════════ */
+@layer utilities {
+  .container-site {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 5vw, 5rem);
+  }
+
+  .section-padding {
+    padding-block: clamp(4rem, 10vw, 8rem);
+  }
+
+  .label-tag {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+
+  .divider {
+    width: 2.5rem;
+    height: 1px;
+    background-color: var(--color-accent);
+    display: block;
+  }
+
+  /* Adaptive section backgrounds:
+     light theme → light/warm bg; dark theme → dark bg */
+  .section-adaptive {
+    background-color: var(--color-bg-warm);
+  }
+  [data-theme="dark"] .section-adaptive {
+    background-color: var(--color-bg-dark);
+  }
+
+  .section-adaptive-light {
+    background-color: var(--color-bg);
+  }
+  [data-theme="dark"] .section-adaptive-light {
+    background-color: var(--color-bg-dark);
+  }
+
+  /* ── Button component base ──────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    border: 1px solid transparent;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      background-color 260ms ease,
+      color            260ms ease,
+      border-color     260ms ease,
+      transform        260ms ease,
+      box-shadow       260ms ease;
+  }
+  .btn:hover:not(:disabled):not([aria-disabled="true"]) {
+    transform: translateY(-1px);
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Sizes */
+  .btn-sm  { padding: 0.5rem 1.125rem; }
+  .btn-md  { padding: 0.875rem 1.75rem; }
+  .btn-lg  { padding: 1rem 2rem; }
+  .btn-full { width: 100%; }
+
+  /* Variant: primary — dark bg + light text in light; accent bg + dark text in dark */
+  .btn-primary {
+    background-color: var(--btn-primary-bg);
+    color:            var(--btn-primary-text);
+    border-color:     var(--btn-primary-border);
+  }
+  .btn-primary:hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(--btn-primary-hover-bg);
+    color:            var(--btn-primary-hover-text);
+    border-color:     var(--btn-primary-hover-border);
+  }
+
+  /* Variant: secondary — transparent border */
+  .btn-secondary {
+    background-color: var(--btn-secondary-bg);
+    color:            var(--btn-secondary-text);
+    border-color:     var(--btn-secondary-border);
+  }
+  .btn-secondary:hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(--btn-secondary-hover-bg);
+    color:            var(--btn-secondary-hover-text);
+    border-color:     var(--btn-secondary-hover-border);
+  }
+
+  /* Variant: accent — always warm accent color */
+  .btn-accent {
+    background-color: var(--btn-accent-bg);
+    color:            var(--btn-accent-text);
+    border-color:     var(--btn-accent-border);
+  }
+  .btn-accent:hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(--btn-accent-hover-bg);
+    color:            var(--btn-accent-hover-text);
+    border-color:     var(--btn-accent-hover-border);
+  }
+
+  /* Variant: ghost — no background */
+  .btn-ghost {
+    background-color: var(--btn-ghost-bg);
+    color:            var(--btn-ghost-text);
+    border-color:     var(--btn-ghost-border);
+  }
+  .btn-ghost:hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(--btn-ghost-hover-bg);
+    color:            var(--btn-ghost-hover-text);
+    border-color:     var(--btn-ghost-hover-border);
+  }
+
+  /* Variant: submit — same as primary, full-width context */
+  .btn-submit {
+    background-color: var(--btn-primary-bg);
+    color:            var(--btn-primary-text);
+    border-color:     var(--btn-primary-border);
+  }
+  .btn-submit:hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(--btn-primary-hover-bg);
+    color:            var(--btn-primary-hover-text);
+    border-color:     var(--btn-primary-hover-border);
+  }
+
+  /* Legacy .submit-btn — kept for backwards compat, uses same tokens */
+  .submit-btn {
+    background-color: var(--btn-primary-bg);
+    color:            var(--btn-primary-text);
+    transition: background-color 260ms ease, color 260ms ease, border-color 260ms ease;
+  }
+  .submit-btn:hover:not(:disabled) {
+    background-color: var(--btn-primary-hover-bg);
+    color:            var(--btn-primary-hover-text);
+  }
+  .submit-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   MOTION SYSTEM
+   data-reveal="up|left|right|scale|clip"
+   data-reveal-delay="100|200|…"
+═══════════════════════════════════════════════════ */
+
+/* Base hidden state */
+[data-reveal] {
+  opacity: 0;
+  transition:
+    opacity    900ms var(--ease-out),
+    transform  900ms var(--ease-out),
+    clip-path  1000ms var(--ease-out),
+    filter     900ms var(--ease-out);
+}
+
+/* Directional variants */
+[data-reveal="up"]    { transform: translate3d(0, 2.5rem, 0); }
+[data-reveal="left"]  { transform: translate3d(-3rem, 0, 0); }
+[data-reveal="right"] { transform: translate3d(3rem, 0, 0); }
+[data-reveal="scale"] { transform: scale(0.94); filter: blur(6px); }
+[data-reveal="clip"]  {
+  clip-path: inset(0 100% 0 0);
+  transform: none;
+  opacity: 1; /* opacity driven by clip-path */
+}
+[data-reveal="fade"]  { transform: none; }
+
+/* Visible state — shared reveal class */
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
+  clip-path: inset(0 0% 0 0);
+}
+
+/* JS-guard: if JS never ran or crashed, reveal elements are visible */
+html:not(.js) [data-reveal],
+html:not(.js) .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  clip-path: none !important;
+}
+
+/* Disable expensive blur reveal on touch/mobile devices */
+@media (hover: none) and (pointer: coarse) {
+  [data-reveal="scale"],
+  [data-reveal="scale"].is-visible {
+    filter: none;
+    transform: scale(1);
+  }
+}
+
+/* Delay utilities */
+[data-reveal-delay="100"]  { transition-delay: 100ms; }
+[data-reveal-delay="150"]  { transition-delay: 150ms; }
+[data-reveal-delay="200"]  { transition-delay: 200ms; }
+[data-reveal-delay="300"]  { transition-delay: 300ms; }
+[data-reveal-delay="400"]  { transition-delay: 400ms; }
+[data-reveal-delay="500"]  { transition-delay: 500ms; }
+[data-reveal-delay="600"]  { transition-delay: 600ms; }
+[data-reveal-delay="700"]  { transition-delay: 700ms; }
+[data-reveal-delay="800"]  { transition-delay: 800ms; }
+
+/* Legacy .reveal class (backwards compat) */
+.reveal {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition:
+    opacity   800ms var(--ease-out),
+    transform 800ms var(--ease-out);
+}
+.reveal.visible, .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 100ms; }
+.reveal-delay-2 { transition-delay: 200ms; }
+.reveal-delay-3 { transition-delay: 300ms; }
+.reveal-delay-4 { transition-delay: 400ms; }
+.reveal-delay-5 { transition-delay: 500ms; }
+
+/* ═══════════════════════════════════════════════════
+   VIEW TRANSITIONS
+═══════════════════════════════════════════════════ */
+@keyframes vt-fade-in {
+  from { opacity: 0; transform: translateY(0.4rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes vt-fade-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-0.2rem); }
+}
+
+::view-transition-old(root) {
+  animation: 260ms cubic-bezier(0.4, 0, 1, 1) both vt-fade-out;
+}
+::view-transition-new(root) {
+  animation: 380ms var(--ease-out) 80ms both vt-fade-in;
+}
+
+/* ═══════════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════════ */
+::-webkit-scrollbar         { width: 4px; }
+::-webkit-scrollbar-track   { background: var(--color-bg); }
+::-webkit-scrollbar-thumb   { background: var(--color-border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-accent); }
+
+/* ═══════════════════════════════════════════════════
+   REDUCED MOTION — override everything
+═══════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal].is-visible,
+  .reveal,
+  .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
