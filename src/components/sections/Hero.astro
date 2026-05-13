@@ -34,7 +34,7 @@ import Button from '../ui/Button.astro';
 
     <div class="container-site hero-content">
       <div class="hero-eyebrow">
-        <span class="label-tag" style="color: var(--glass-hero-text-m);">Авторская флористика · Москва</span>
+        <span class="label-tag hero-eyebrow-text">Авторская флористика · Москва</span>
       </div>
 
       <!-- Title overflows into bottom section via negative margin -->
@@ -186,7 +186,13 @@ import Button from '../ui/Button.astro';
     pointer-events: none;
   }
   :global([data-theme="light"]) .hero-photo-overlay {
-    background: rgba(251, 246, 241, 0.06);
+    background: linear-gradient(
+      to top,
+      rgba(8, 14, 10, 0.62) 0%,
+      rgba(8, 14, 10, 0.38) 40%,
+      rgba(8, 14, 10, 0.12) 72%,
+      rgba(8, 14, 10, 0.00) 100%
+    );
   }
 
   .hero-content {
@@ -200,6 +206,8 @@ import Button from '../ui/Button.astro';
     margin-bottom: 1.5rem; opacity: 0; transform: translateY(0.5rem);
     transition: opacity 0.8s var(--ease-out) 0.3s, transform 0.8s var(--ease-out) 0.3s;
   }
+  .hero-eyebrow-text { color: var(--glass-hero-text-m); }
+  :global([data-theme="light"]) .hero-eyebrow-text { color: rgba(255, 244, 238, 0.82); }
 
   /* ── TITLE crosses the boundary ──────────────── */
   .hero-title {
@@ -215,10 +223,13 @@ import Button from '../ui/Button.astro';
     z-index: 20;
     text-wrap: balance;
   }
-  :global([data-theme="light"]) .hero-title { color: #261818; }
+  :global([data-theme="light"]) .hero-title {
+    color: #fff4ee;
+    text-shadow: none;
+  }
 
   .hero-em { font-style: italic; color: #f4b3d2; }
-  :global([data-theme="light"]) .hero-em { color: #8a2f48; }
+  :global([data-theme="light"]) .hero-em { color: #f4b3d2; }
 
   .hero-line-wrap { display: block; overflow: hidden; }
   .hero-line {
@@ -255,7 +266,7 @@ import Button from '../ui/Button.astro';
     display: flex;
     flex-direction: column;
     justify-content: end;
-    gap: 1.65rem;
+    gap: 3rem;
   }
 
   .hero-sub {
@@ -354,6 +365,8 @@ import Button from '../ui/Button.astro';
   .hero-animate .hero-deco-line { transform: scaleY(1); }
 
   /* ── RESPONSIVE ────────────────────────────────── */
+  :global([data-theme="light"]) .hero-line-3 { color: #261818; }
+
   @media (max-width: 768px) {
     .hero-top { min-height: 62svh; }
     .hero-content { margin-bottom: -3.25rem; }
