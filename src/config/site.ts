@@ -11,9 +11,10 @@ export const siteConfig = {
     email: 'hello@flovers.ru',
     phone: '+7 900 123-45-67',
     address: 'Москва, ул. Цветочная, 12',
-    telegram: '#',
-    whatsapp: '#',
-    instagram: '#',
+    telegram: 'https://t.me/flovers',
+    whatsapp: 'https://wa.me/79001234567',
+    instagram: 'https://instagram.com/flovers',
+    vk: 'https://vk.com/flovers',
   },
 
   nav: [

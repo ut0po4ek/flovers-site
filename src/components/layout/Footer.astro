@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from '../../config/site';
+import Icon from '../ui/Icon.astro';
 const navLinks = siteConfig.nav;
 ---
 
@@ -25,6 +26,24 @@ const navLinks = siteConfig.nav;
     background: rgba(247, 241, 231, 0.10);
   }
   .footer-bottom-border { border-top: 1px solid var(--footer-border); }
+  .footer-social-link {
+    width: 2.125rem;
+    height: 2.125rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--footer-border);
+    border-radius: 999px;
+    color: var(--footer-text-sub);
+    transition: border-color 220ms ease, color 220ms ease, background-color 220ms ease;
+  }
+  .footer-social-link:hover,
+  .footer-social-link:focus-visible {
+    outline: none;
+    border-color: rgba(244, 179, 210, 0.48);
+    color: var(--color-accent);
+    background: rgba(244, 179, 210, 0.08);
+  }
 </style>
 
 <footer class="footer-root bg-[var(--color-bg-dark)]">
@@ -62,19 +81,14 @@ const navLinks = siteConfig.nav;
           >
             {siteConfig.contacts.phone}
           </a>
-          <a
-            href={`mailto:${siteConfig.contacts.email}`}
-            class="footer-link-muted text-sm transition-colors duration-200"
-          >
-            {siteConfig.contacts.email}
-          </a>
           <p class="footer-link-muted text-sm">{siteConfig.contacts.address}</p>
         </div>
 
-        <div class="flex gap-4 mt-6">
-          <a href={siteConfig.contacts.telegram} class="label-tag footer-link-sub transition-colors duration-200" aria-label="Telegram">TG</a>
-          <a href={siteConfig.contacts.whatsapp} class="label-tag footer-link-sub transition-colors duration-200" aria-label="WhatsApp">WA</a>
-          <a href={siteConfig.contacts.instagram} class="label-tag footer-link-sub transition-colors duration-200" aria-label="Instagram">IG</a>
+        <div class="flex gap-2.5 mt-6">
+          <a href={siteConfig.contacts.telegram} class="footer-social-link" aria-label="Telegram" target="_blank" rel="noreferrer"><Icon name="telegram" size={18} /></a>
+          <a href={siteConfig.contacts.whatsapp} class="footer-social-link" aria-label="WhatsApp" target="_blank" rel="noreferrer"><Icon name="whatsapp" size={18} /></a>
+          <a href={siteConfig.contacts.instagram} class="footer-social-link" aria-label="Instagram" target="_blank" rel="noreferrer"><Icon name="instagram" size={18} /></a>
+          <a href={siteConfig.contacts.vk} class="footer-social-link" aria-label="VK" target="_blank" rel="noreferrer"><Icon name="vk" size={18} /></a>
         </div>
       </div>
 

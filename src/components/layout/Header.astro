@@ -223,8 +223,8 @@ const navLinks = siteConfig.nav;
     .site-header[data-state="scrolled"] {
       background: rgba(246, 243, 237, 0.97) !important;
     }
-    [data-theme="dark"] .site-header,
-    [data-theme="dark"] .site-header[data-state="scrolled"] {
+    :global([data-theme="dark"]) .site-header,
+    :global([data-theme="dark"]) .site-header[data-state="scrolled"] {
       background: rgba(10, 10, 9, 0.97) !important;
     }
   }
@@ -335,6 +335,12 @@ const navLinks = siteConfig.nav;
   }
   .theme-menu-item[data-active="true"] {
     color: var(--color-accent);
+    background-color: var(--color-bg-warm);
+  }
+  /* Prevent focus looking like active selection */
+  .theme-menu-item:focus:not([data-active="true"]) {
+    background-color: var(--color-bg-warm);
+    color: var(--color-fg);
   }
 
   /* ─── Mobile theme switcher ──────────────────────── */
@@ -351,211 +357,244 @@ const navLinks = siteConfig.nav;
 </style>
 
 <script>
-  const header   = document.getElementById('site-header')!;
-  const burgerBtn  = document.getElementById('burger-btn')!;
-  const closeBtn   = document.getElementById('close-menu')!;
-  const mobileMenu = document.getElementById('mobile-menu')!;
-  let menuOpen = false;
-
-  /* ─── Header state machine ───────────────────────────── */
-  // state is always either "hero" or "scrolled" — never transparent
-  function applyState(state: 'hero' | 'scrolled') {
-    header.dataset.state = state;
-  }
-
-  function resolveState() {
-    const heroEl = document.getElementById('hero');
-    if (!heroEl) {
-      // pages without hero: always scrolled/light glass
-      applyState('scrolled');
-      return;
-    }
-    const heroBottom = heroEl.getBoundingClientRect().bottom;
-    // threshold: header height ~72px
-    applyState(heroBottom < 72 ? 'scrolled' : 'hero');
-  }
-
-  // Set correct state immediately on load (before any scroll)
-  resolveState();
-
-  window.addEventListener('scroll', resolveState, { passive: true });
-
-  // After View Transitions re-run setup
-  document.addEventListener('astro:page-load', () => {
-    resolveState();
-  });
-
-  /* ─── Mobile menu ────────────────────────────────────── */
-  function openMenu() {
-    menuOpen = true;
-    mobileMenu.classList.add('is-open');
-    mobileMenu.setAttribute('aria-hidden', 'false');
-    burgerBtn.setAttribute('aria-expanded', 'true');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeMenu() {
-    menuOpen = false;
-    mobileMenu.classList.remove('is-open');
-    mobileMenu.setAttribute('aria-hidden', 'true');
-    burgerBtn.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-  }
-
-  burgerBtn.addEventListener('click', () => menuOpen ? closeMenu() : openMenu());
-  closeBtn.addEventListener('click', closeMenu);
-  mobileMenu.querySelectorAll('[data-close-menu]').forEach(el =>
-    el.addEventListener('click', closeMenu)
-  );
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && menuOpen) closeMenu();
-  });
-
-  /* ─── Theme system ───────────────────────────────── */
-  const STORAGE_KEY = 'flovers-theme';
-  const VALID_PREFS: ThemePreference[] = ['light', 'dark', 'system'];
-
   type ThemePreference = 'light' | 'dark' | 'system';
 
-  // Module-level state (survives View Transitions)
+  const STORAGE_KEY = 'flovers-theme';
+  const VALID_PREFS: ThemePreference[] = ['light', 'dark', 'system'];
+  let menuOpen = false;
   let themeMenuOpen = false;
 
-  function getStoredPreference(): ThemePreference {
+  function getThemePreference(): ThemePreference {
     try {
-      return (localStorage.getItem(STORAGE_KEY) as ThemePreference) || 'system';
+      const saved = localStorage.getItem(STORAGE_KEY) as ThemePreference | null;
+      return saved && VALID_PREFS.includes(saved) ? saved : 'system';
     } catch {
       return 'system';
     }
   }
 
-  function resolveTheme(pref: ThemePreference): 'light' | 'dark' {
-    if (pref === 'system') {
+  function resolveTheme(preference: ThemePreference): 'light' | 'dark' {
+    if (preference === 'system') {
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
-    return pref;
+    return preference;
   }
 
-  function applyTheme(preference: ThemePreference) {
-    if (!VALID_PREFS.includes(preference)) return;
+  function syncTheme(preference = getThemePreference(), persist = false, animate = false) {
+    if (!VALID_PREFS.includes(preference)) preference = 'system';
 
-    try {
-      localStorage.setItem(STORAGE_KEY, preference);
-    } catch { /* Safari private mode — ignore */ }
-
-    const resolved = resolveTheme(preference);
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduced) {
-      document.documentElement.classList.add('theme-transitioning');
-      setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 300);
+    if (persist) {
+      try {
+        localStorage.setItem(STORAGE_KEY, preference);
+      } catch {
+        /* Safari private mode can block localStorage writes. */
+      }
     }
 
-    document.documentElement.dataset.theme = resolved;
+    if (animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('theme-transitioning');
+      window.setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 300);
+    }
+
+    document.documentElement.dataset.theme = resolveTheme(preference);
     document.documentElement.dataset.themePreference = preference;
     updateThemeUI(preference);
   }
 
-  function updateThemeUI(preference: ThemePreference) {
-    // Desktop icon
-    document.querySelectorAll<HTMLElement>('.theme-icon-light, .theme-icon-dark, .theme-icon-system').forEach(el => {
-      el.classList.add('hidden');
+  function updateThemeUI(preference = getThemePreference()) {
+    document.querySelectorAll<HTMLElement>('.theme-icon-light, .theme-icon-dark, .theme-icon-system').forEach((icon) => {
+      icon.classList.add('hidden');
     });
-    const activeIcon = document.querySelector<HTMLElement>(`.theme-icon-${preference}`);
-    activeIcon?.classList.remove('hidden');
+    document.querySelector<HTMLElement>(`.theme-icon-${preference}`)?.classList.remove('hidden');
 
-    // Desktop menu items active state
-    document.querySelectorAll<HTMLElement>('.theme-menu-item').forEach(btn => {
-      btn.dataset.active = String(btn.dataset.themeOption === preference);
+    document.querySelectorAll<HTMLElement>('.theme-menu-item').forEach((button) => {
+      button.dataset.active = String(button.dataset.themeOption === preference);
     });
 
-    // Mobile buttons active state
-    document.querySelectorAll<HTMLElement>('.mobile-theme-btn').forEach(btn => {
-      btn.dataset.active = String(btn.dataset.mobileTheme === preference);
+    document.querySelectorAll<HTMLElement>('.mobile-theme-btn').forEach((button) => {
+      button.dataset.active = String(button.dataset.mobileTheme === preference);
     });
   }
 
-  // DOM-bound listeners — re-run after each View Transition
-  function initThemeListeners() {
-    const themeBtn = document.getElementById('theme-btn');
+  function closeThemeMenu() {
+    const themeButton = document.getElementById('theme-btn');
     const themeMenu = document.getElementById('theme-menu');
-    if (!themeBtn || !themeMenu) return; // guard: elements may not exist on every page
+    themeMenuOpen = false;
+    themeMenu?.classList.add('hidden');
+    themeButton?.setAttribute('aria-expanded', 'false');
+  }
 
-    function openThemeMenu() {
-      themeMenuOpen = true;
-      themeMenu!.classList.remove('hidden');
-      themeBtn!.setAttribute('aria-expanded', 'true');
-      const firstItem = themeMenu!.querySelector<HTMLElement>('[role="menuitem"]');
-      firstItem?.focus();
+  function openThemeMenu() {
+    const themeButton = document.getElementById('theme-btn');
+    const themeMenu = document.getElementById('theme-menu');
+    if (!themeButton || !themeMenu) return;
+
+    themeMenuOpen = true;
+    themeMenu.classList.remove('hidden');
+    themeButton.setAttribute('aria-expanded', 'true');
+    const activeItem = themeMenu.querySelector<HTMLElement>('[data-active="true"]')
+      ?? themeMenu.querySelector<HTMLElement>('[role="menuitem"]');
+    activeItem?.focus();
+  }
+
+  function resolveHeaderState() {
+    const header = document.getElementById('site-header');
+    if (!header) return;
+
+    const hero = document.getElementById('hero');
+    if (!hero) {
+      header.dataset.state = 'scrolled';
+      return;
     }
 
-    function closeThemeMenu() {
-      themeMenuOpen = false;
-      themeMenu!.classList.add('hidden');
-      themeBtn!.setAttribute('aria-expanded', 'false');
+    header.dataset.state = hero.getBoundingClientRect().bottom < 72 ? 'scrolled' : 'hero';
+  }
+
+  function closeMobileMenu() {
+    const burgerButton = document.getElementById('burger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuOpen = false;
+    mobileMenu?.classList.remove('is-open');
+    mobileMenu?.setAttribute('aria-hidden', 'true');
+    burgerButton?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  function openMobileMenu() {
+    const burgerButton = document.getElementById('burger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (!burgerButton || !mobileMenu) return;
+
+    menuOpen = true;
+    mobileMenu.classList.add('is-open');
+    mobileMenu.setAttribute('aria-hidden', 'false');
+    burgerButton.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function initHeaderState() {
+    resolveHeaderState();
+    if (document.documentElement.dataset.headerScrollBound === 'true') return;
+    document.documentElement.dataset.headerScrollBound = 'true';
+    window.addEventListener('scroll', resolveHeaderState, { passive: true });
+  }
+
+  function initMobileMenu() {
+    const burgerButton = document.getElementById('burger-btn');
+    const closeButton = document.getElementById('close-menu');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (burgerButton && burgerButton.dataset.menuBound !== 'true') {
+      burgerButton.dataset.menuBound = 'true';
+      burgerButton.addEventListener('click', () => {
+        menuOpen ? closeMobileMenu() : openMobileMenu();
+      });
     }
 
-    themeBtn.addEventListener('click', () => {
-      themeMenuOpen ? closeThemeMenu() : openThemeMenu();
+    if (closeButton && closeButton.dataset.menuBound !== 'true') {
+      closeButton.dataset.menuBound = 'true';
+      closeButton.addEventListener('click', closeMobileMenu);
+    }
+
+    mobileMenu?.querySelectorAll<HTMLElement>('[data-close-menu]').forEach((link) => {
+      if (link.dataset.menuBound === 'true') return;
+      link.dataset.menuBound = 'true';
+      link.addEventListener('click', closeMobileMenu);
     });
 
-    // Keyboard navigation within menu
-    themeMenu.addEventListener('keydown', (e: KeyboardEvent) => {
-      const items = Array.from(themeMenu!.querySelectorAll<HTMLElement>('[role="menuitem"]'));
-      const current = document.activeElement as HTMLElement;
-      const idx = items.indexOf(current);
+    if (document.documentElement.dataset.mobileMenuKeyBound !== 'true') {
+      document.documentElement.dataset.mobileMenuKeyBound = 'true';
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && menuOpen) closeMobileMenu();
+      });
+    }
+  }
 
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        items[(idx + 1) % items.length]?.focus();
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        items[(idx - 1 + items.length) % items.length]?.focus();
-      } else if (e.key === 'Escape') {
-        closeThemeMenu();
-        themeBtn!.focus();
-      }
-    });
+  function initThemeSwitcher() {
+    syncTheme(getThemePreference(), false, false);
 
-    // Desktop menu item clicks
-    themeMenu.querySelectorAll<HTMLElement>('[data-theme-option]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        applyTheme(btn.dataset.themeOption as ThemePreference);
+    const themeButton = document.getElementById('theme-btn');
+    const themeMenu = document.getElementById('theme-menu');
+
+    if (themeButton && themeButton.dataset.themeBound !== 'true') {
+      themeButton.dataset.themeBound = 'true';
+      themeButton.addEventListener('click', () => {
+        themeMenuOpen ? closeThemeMenu() : openThemeMenu();
+      });
+    }
+
+    if (themeMenu && themeMenu.dataset.themeBound !== 'true') {
+      themeMenu.dataset.themeBound = 'true';
+      themeMenu.addEventListener('keydown', (event: KeyboardEvent) => {
+        const items = Array.from(themeMenu.querySelectorAll<HTMLElement>('[role="menuitem"]'));
+        const current = document.activeElement as HTMLElement;
+        const index = items.indexOf(current);
+
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          items[(index + 1) % items.length]?.focus();
+        } else if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          items[(index - 1 + items.length) % items.length]?.focus();
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          closeThemeMenu();
+          themeButton?.focus();
+        }
+      });
+    }
+
+    themeMenu?.querySelectorAll<HTMLElement>('[data-theme-option]').forEach((button) => {
+      if (button.dataset.themeBound === 'true') return;
+      button.dataset.themeBound = 'true';
+      button.addEventListener('click', () => {
+        syncTheme(button.dataset.themeOption as ThemePreference, true, true);
         closeThemeMenu();
       });
     });
 
-    // Mobile theme buttons
-    document.querySelectorAll<HTMLElement>('[data-mobile-theme]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        applyTheme(btn.dataset.mobileTheme as ThemePreference);
+    document.querySelectorAll<HTMLElement>('[data-mobile-theme]').forEach((button) => {
+      if (button.dataset.themeBound === 'true') return;
+      button.dataset.themeBound = 'true';
+      button.addEventListener('click', () => {
+        syncTheme(button.dataset.mobileTheme as ThemePreference, true, true);
       });
     });
+
+    if (document.documentElement.dataset.themeOutsideBound !== 'true') {
+      document.documentElement.dataset.themeOutsideBound = 'true';
+      document.addEventListener('click', (event) => {
+        if (!themeMenuOpen) return;
+        const button = document.getElementById('theme-btn');
+        const menu = document.getElementById('theme-menu');
+        if (button && menu && !button.contains(event.target as Node) && !menu.contains(event.target as Node)) {
+          closeThemeMenu();
+        }
+      });
+    }
+
+    if (document.documentElement.dataset.themeOsBound !== 'true') {
+      document.documentElement.dataset.themeOsBound = 'true';
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (getThemePreference() === 'system') syncTheme('system', false, true);
+      });
+    }
   }
 
-  // Click-outside: stays module-scope (document persists), uses module-level themeMenuOpen
-  document.addEventListener('click', (e) => {
-    if (!themeMenuOpen) return;
-    const btn = document.getElementById('theme-btn');
-    const menu = document.getElementById('theme-menu');
-    if (btn && menu && !btn.contains(e.target as Node) && !menu.contains(e.target as Node)) {
-      themeMenuOpen = false;
-      menu.classList.add('hidden');
-      btn.setAttribute('aria-expanded', 'false');
-    }
-  });
-
-  // OS theme change listener (for 'system' preference)
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (getStoredPreference() === 'system') {
-      applyTheme('system');
-    }
-  });
-
-  // Initialize: called on first load AND after each View Transition
-  function initThemeUI() {
-    updateThemeUI(getStoredPreference());
-    initThemeListeners(); // rebind DOM listeners
+  function initHeaderChrome() {
+    initHeaderState();
+    initMobileMenu();
+    initThemeSwitcher();
   }
-  initThemeUI();
-  document.addEventListener('astro:page-load', initThemeUI);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHeaderChrome, { once: true });
+  } else {
+    initHeaderChrome();
+  }
+
+  if (document.documentElement.dataset.headerPageLoadBound !== 'true') {
+    document.documentElement.dataset.headerPageLoadBound = 'true';
+    document.addEventListener('astro:page-load', initHeaderChrome);
+  }
 </script>

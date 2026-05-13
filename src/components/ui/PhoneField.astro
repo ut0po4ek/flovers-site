@@ -1,0 +1,186 @@
+---
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  placeholder?: string;
+  required?: boolean;
+  error?: string;
+}
+
+const {
+  id,
+  name,
+  label,
+  placeholder = '+7 (___) ___-__-__',
+  required = false,
+  error,
+} = Astro.props;
+---
+
+<div class="form-field">
+  <label for={id} class="field-label">
+    {label}{required && <span aria-hidden="true"> *</span>}
+  </label>
+  <input
+    id={id}
+    name={name}
+    type="tel"
+    inputmode="tel"
+    autocomplete="tel"
+    required={required}
+    placeholder={placeholder}
+    aria-describedby={error ? `${id}-error` : undefined}
+    class="form-control"
+    data-phone-mask="ru"
+  />
+  {error && <p id={`${id}-error`} class="field-error hidden">{error}</p>}
+</div>
+
+<style>
+  .field-label {
+    display: block;
+    margin-bottom: 0.55rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+
+  .form-control {
+    width: 100%;
+    min-height: 3.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--color-surface) 62%, transparent);
+    color: var(--color-fg);
+    padding: 0.9rem 1rem;
+    font: inherit;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    transition: border-color 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+  }
+
+  .form-control::placeholder { color: var(--color-fg-subtle); }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 4px rgba(233, 168, 199, 0.18);
+    background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+  }
+
+  .field-error {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: #ef4444;
+  }
+</style>
+
+<script>
+  function getRuPhoneDigits(value: string) {
+    let digits = value.replace(/\D/g, '');
+
+    if (digits.startsWith('8')) {
+      digits = `7${digits.slice(1)}`;
+    }
+
+    if (digits.startsWith('7')) {
+      digits = digits.slice(1);
+    }
+
+    return digits.slice(0, 10);
+  }
+
+  function formatRuPhoneFromDigits(digits: string) {
+    if (!digits) return '';
+
+    const code = digits.slice(0, 3);
+    const first = digits.slice(3, 6);
+    const second = digits.slice(6, 8);
+    const third = digits.slice(8, 10);
+
+    let result = `+7 (${code}`;
+    if (code.length === 3) result += ')';
+    if (first) result += ` ${first}`;
+    if (second) result += `-${second}`;
+    if (third) result += `-${third}`;
+
+    return result;
+  }
+
+  function formatRuPhone(value: string) {
+    return formatRuPhoneFromDigits(getRuPhoneDigits(value));
+  }
+
+  function getLocalDigitPositions(value: string) {
+    const positions: number[] = [];
+
+    for (let index = 0; index < value.length; index += 1) {
+      if (/\d/.test(value[index])) positions.push(index);
+    }
+
+    return value.trimStart().startsWith('+7') ? positions.slice(1) : positions;
+  }
+
+  function initPhoneMasks() {
+    document.querySelectorAll<HTMLInputElement>('[data-phone-mask="ru"]').forEach((input) => {
+      if (input.dataset.maskReady === 'true') return;
+      input.dataset.maskReady = 'true';
+
+      input.addEventListener('beforeinput', (event: InputEvent) => {
+        if (event.inputType !== 'deleteContentBackward' && event.inputType !== 'deleteContentForward') return;
+        if (!input.value) return;
+
+        const start = input.selectionStart ?? input.value.length;
+        const end = input.selectionEnd ?? start;
+        const positions = getLocalDigitPositions(input.value);
+        let digits = getRuPhoneDigits(input.value);
+        if (!digits) return;
+
+        let removeFrom = -1;
+        let removeTo = -1;
+
+        if (start !== end) {
+          const selectedIndexes = positions
+            .map((position, index) => ({ position, index }))
+            .filter(({ position }) => position >= start && position < end)
+            .map(({ index }) => index);
+
+          if (selectedIndexes.length) {
+            removeFrom = selectedIndexes[0];
+            removeTo = selectedIndexes[selectedIndexes.length - 1] + 1;
+          }
+        }
+
+        if (removeFrom === -1) {
+          const targetIndex = event.inputType === 'deleteContentBackward'
+            ? positions.map((position, index) => ({ position, index })).filter(({ position }) => position < start).pop()?.index
+            : positions.map((position, index) => ({ position, index })).find(({ position }) => position >= start)?.index;
+
+          if (targetIndex === undefined) return;
+          removeFrom = targetIndex;
+          removeTo = targetIndex + 1;
+        }
+
+        event.preventDefault();
+        digits = `${digits.slice(0, removeFrom)}${digits.slice(removeTo)}`;
+        input.value = formatRuPhoneFromDigits(digits);
+        input.setSelectionRange(input.value.length, input.value.length);
+      });
+
+      input.addEventListener('input', () => {
+        input.value = formatRuPhone(input.value);
+        input.setSelectionRange(input.value.length, input.value.length);
+      });
+
+      input.addEventListener('blur', () => {
+        input.value = formatRuPhone(input.value);
+      });
+    });
+  }
+
+  initPhoneMasks();
+  document.addEventListener('astro:page-load', initPhoneMasks);
+</script>

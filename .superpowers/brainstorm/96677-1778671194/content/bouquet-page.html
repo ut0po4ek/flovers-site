@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Страница букета FLOVERS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1910; color: #fff4ee; font-family: 'Inter', sans-serif; font-size: 14px; }
+
+  .page-header { padding: 22px 28px 6px; text-align: center; }
+  .page-header h2 { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #a89080; margin-bottom: 4px; }
+  .page-header p { font-size: 0.72rem; color: #5a4a40; }
+
+  .options-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px 20px 60px; }
+
+  .opt {
+    border: 1.5px solid #1a2820; border-radius: 10px; overflow: hidden;
+    cursor: pointer; transition: border-color 0.2s;
+    background: #0f1e14;
+  }
+  .opt:hover { border-color: #5a3040; }
+  .opt.selected { border-color: #f4b3d2 !important; box-shadow: 0 0 0 1px #f4b3d2; }
+
+  .opt-label {
+    padding: 10px 14px 8px;
+    font-size: 0.58rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #7a6050;
+    border-bottom: 1px solid #1a2820;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .opt-label .rec { background: #f4b3d2; color: #321221; padding: 1px 6px; font-size: 0.48rem; letter-spacing: 0.08em; }
+  .opt-body { padding: 12px 14px 14px; }
+
+  /* ── Layout A: big photo left + info right ── */
+  .layout-a { display: flex; gap: 10px; }
+  .la-photo {
+    width: 48%; flex-shrink: 0;
+    aspect-ratio: 3/4;
+    background: linear-gradient(160deg, #1a3020 0%, #2e1525 100%);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem;
+    position: relative; overflow: hidden;
+  }
+  .la-photo .gallery-dots {
+    position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 4px;
+  }
+  .gallery-dots span { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.4); }
+  .gallery-dots span.active { background: #f4b3d2; }
+  .la-info { flex: 1; display: flex; flex-direction: column; gap: 8px; padding-top: 2px; }
+  .la-cat { font-size: 0.48rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,244,238,0.4); }
+  .la-title { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 300; line-height: 1.1; color: #fff4ee; }
+  .la-price { font-size: 0.75rem; font-weight: 500; color: #f4b3d2; }
+  .la-desc { font-size: 0.58rem; color: rgba(255,244,238,0.55); line-height: 1.55; }
+  .la-divider { height: 1px; background: #1a2820; }
+  .la-comp { font-size: 0.55rem; }
+  .la-comp-label { font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,244,238,0.35); margin-bottom: 5px; }
+  .la-comp-items { display: flex; flex-wrap: wrap; gap: 4px; }
+  .la-comp-item { font-size: 0.5rem; border: 1px solid rgba(244,179,210,0.25); color: rgba(255,244,238,0.6); padding: 2px 7px; border-radius: 2px; }
+  .la-details { font-size: 0.52rem; color: rgba(255,244,238,0.45); display: flex; flex-direction: column; gap: 3px; }
+  .la-detail-row { display: flex; justify-content: space-between; }
+  .la-detail-row span:first-child { color: rgba(255,244,238,0.3); }
+  .la-btn { font-size: 0.5rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; background: #f4b3d2; color: #321221; padding: 6px 12px; text-align: center; margin-top: auto; }
+
+  /* ── Layout B: fullscreen photo top + info below ── */
+  .layout-b {}
+  .lb-hero {
+    width: 100%; aspect-ratio: 4/3;
+    background: linear-gradient(160deg, #1a3020 0%, #2e1525 100%);
+    display: flex; align-items: center; justify-content: center; font-size: 4rem;
+    border-radius: 6px; margin-bottom: 10px; position: relative;
+  }
+  .lb-hero .lb-badge { position: absolute; top: 8px; left: 8px; background: #f4b3d2; color: #321221; font-size: 0.45rem; padding: 2px 6px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .lb-meta { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+  .lb-cat { font-size: 0.48rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,244,238,0.4); }
+  .lb-price { font-size: 0.68rem; font-weight: 500; color: #f4b3d2; }
+  .lb-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 300; color: #fff4ee; margin-bottom: 6px; }
+  .lb-desc { font-size: 0.55rem; color: rgba(255,244,238,0.5); line-height: 1.5; margin-bottom: 8px; }
+  .lb-gallery { display: flex; gap: 5px; margin-bottom: 8px; }
+  .lb-thumb { width: 28%; aspect-ratio: 1/1; background: linear-gradient(135deg, #1a3020, #2e1525); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; border: 1.5px solid transparent; }
+  .lb-thumb.active { border-color: #f4b3d2; }
+  .lb-btn { font-size: 0.5rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; background: #f4b3d2; color: #321221; padding: 6px 12px; text-align: center; }
+
+  /* ── Layout C: editorial magazine ── */
+  .layout-c {}
+  .lc-top { display: grid; grid-template-columns: 3fr 2fr; gap: 8px; margin-bottom: 8px; }
+  .lc-photo-main {
+    aspect-ratio: 2/3;
+    background: linear-gradient(160deg, #1a3020 0%, #2e1525 100%);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; font-size: 4rem;
+  }
+  .lc-right { display: flex; flex-direction: column; gap: 6px; }
+  .lc-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; color: #fff4ee; line-height: 1.1; }
+  .lc-cat { font-size: 0.48rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,244,238,0.38); }
+  .lc-price { font-size: 0.7rem; font-weight: 500; color: #f4b3d2; }
+  .lc-desc { font-size: 0.52rem; color: rgba(255,244,238,0.48); line-height: 1.5; }
+  .lc-btn { font-size: 0.48rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; background: #f4b3d2; color: #321221; padding: 5px 10px; display: inline-block; }
+  .lc-photo-sm {
+    aspect-ratio: 1/1;
+    background: linear-gradient(135deg, #2a1525, #1a3020);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; font-size: 2rem;
+  }
+  .lc-bottom { display: flex; gap: 6px; }
+  .lc-fact { flex: 1; background: rgba(255,244,238,0.03); border: 1px solid #1a2820; border-radius: 4px; padding: 7px 8px; }
+  .lc-fact-label { font-size: 0.44rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,244,238,0.3); margin-bottom: 3px; }
+  .lc-fact-value { font-size: 0.58rem; color: rgba(255,244,238,0.7); }
+
+  /* Bottom bar */
+  .bottom-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(13,25,16,0.96); border-top: 1px solid #1a2820;
+    padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.68rem; color: #5a4a40; backdrop-filter: blur(8px); z-index: 100;
+  }
+  .bottom-bar .sel { color: #f4b3d2; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h2>Страница букета /catalog/[slug]</h2>
+  <p>Как представить детальную страницу продукта</p>
+</div>
+
+<div class="options-wrap">
+
+  <!-- A: Big photo left + info right — recommended -->
+  <div class="opt" data-choice="a" onclick="pick(this)">
+    <div class="opt-label">Вариант A — Фото слева <span class="rec">Рекомендуется</span></div>
+    <div class="opt-body">
+      <div class="layout-a">
+        <div class="la-photo">🌹
+          <div class="gallery-dots">
+            <span class="active"></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="la-info">
+          <div class="la-cat">Розы · Авторский букет</div>
+          <div class="la-title">Dolce Rose</div>
+          <div class="la-price">4 900 ₽</div>
+          <div class="la-desc">Нежный букет из садовых роз в пыльно-розовых и персиковых оттенках. Для романтических поводов и просто так.</div>
+          <div class="la-divider"></div>
+          <div class="la-comp">
+            <div class="la-comp-label">Состав</div>
+            <div class="la-comp-items">
+              <span class="la-comp-item">Роза Jumilia</span>
+              <span class="la-comp-item">Роза Ohara</span>
+              <span class="la-comp-item">Эвкалипт</span>
+            </div>
+          </div>
+          <div class="la-details">
+            <div class="la-detail-row"><span>Размер</span><span>Средний, 35–40 см</span></div>
+            <div class="la-detail-row"><span>Доставка</span><span>1–3 часа</span></div>
+          </div>
+          <div class="la-btn">Заказать букет</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B: Full photo top + info below -->
+  <div class="opt" data-choice="b" onclick="pick(this)">
+    <div class="opt-label">Вариант B — Фото сверху</div>
+    <div class="opt-body">
+      <div class="layout-b">
+        <div class="lb-hero">🌹<div class="lb-badge">Хит</div></div>
+        <div class="lb-meta">
+          <div>
+            <div class="lb-cat">Розы · Авторский букет</div>
+            <div class="lb-title">Dolce Rose</div>
+          </div>
+          <div class="lb-price">4 900 ₽</div>
+        </div>
+        <div class="lb-desc">Нежный букет из садовых роз в пыльно-розовых и персиковых оттенках.</div>
+        <div class="lb-gallery">
+          <div class="lb-thumb active">🌹</div>
+          <div class="lb-thumb">🌸</div>
+          <div class="lb-thumb">💐</div>
+        </div>
+        <div class="lb-btn">Заказать букет</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: Editorial magazine layout -->
+  <div class="opt" data-choice="c" onclick="pick(this)">
+    <div class="opt-label">Вариант C — Editorial</div>
+    <div class="opt-body">
+      <div class="layout-c">
+        <div class="lc-top">
+          <div class="lc-photo-main">🌹</div>
+          <div class="lc-right">
+            <div class="lc-cat">Розы</div>
+            <div class="lc-title">Dolce Rose</div>
+            <div class="lc-price">4 900 ₽</div>
+            <div class="lc-desc">Нежный букет из садовых роз для романтических поводов.</div>
+            <div class="lc-btn">Заказать</div>
+            <div class="lc-photo-sm">🌸</div>
+          </div>
+        </div>
+        <div class="lc-bottom">
+          <div class="lc-fact"><div class="lc-fact-label">Состав</div><div class="lc-fact-value">Роза, Эвкалипт</div></div>
+          <div class="lc-fact"><div class="lc-fact-label">Размер</div><div class="lc-fact-value">35–40 см</div></div>
+          <div class="lc-fact"><div class="lc-fact-label">Доставка</div><div class="lc-fact-value">1–3 часа</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D: Mobile-first (single column stack) -->
+  <div class="opt" data-choice="d" onclick="pick(this)">
+    <div class="opt-label">Вариант D — Mobile-first стек</div>
+    <div class="opt-body" style="max-width:220px;margin:0 auto;">
+      <div style="aspect-ratio:4/5;background:linear-gradient(160deg,#1a3020,#2e1525);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;margin-bottom:8px;">🌹</div>
+      <div style="font-size:0.48rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,244,238,0.38);margin-bottom:3px;">Розы · Авторский букет</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:#fff4ee;margin-bottom:3px;">Dolce Rose</div>
+      <div style="font-size:0.7rem;font-weight:500;color:#f4b3d2;margin-bottom:6px;">4 900 ₽</div>
+      <div style="font-size:0.55rem;color:rgba(255,244,238,0.48);line-height:1.5;margin-bottom:8px;">Нежный букет из садовых роз в пыльно-розовых оттенках.</div>
+      <div style="font-size:0.5rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;background:#f4b3d2;color:#321221;padding:7px 14px;text-align:center;">Заказать букет</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-bar">
+  <span id="hint">Выберите структуру страницы букета</span>
+  <span id="sel" class="sel"></span>
+</div>
+
+<script>
+const names = { a: 'A — Фото слева', b: 'B — Фото сверху', c: 'C — Editorial', d: 'D — Mobile-first' };
+function pick(el) {
+  document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('hint').textContent = 'Выбрано:';
+  document.getElementById('sel').textContent = names[el.dataset.choice];
+}
+</script>
+</body>
+</html>

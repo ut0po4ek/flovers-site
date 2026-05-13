@@ -1,6 +1,20 @@
 ---
 import Button from '../ui/Button.astro';
+import TextField from '../ui/TextField.astro';
+import PhoneField from '../ui/PhoneField.astro';
+import DatePicker from '../ui/DatePicker.astro';
+import CustomSelect from '../ui/CustomSelect.astro';
+import TextareaField from '../ui/TextareaField.astro';
+import Icon from '../ui/Icon.astro';
 import { siteConfig } from '../../config/site';
+
+const orderTypes = [
+  { value: 'ready', label: 'Готовый букет' },
+  { value: 'custom', label: 'Индивидуальный букет' },
+  { value: 'wedding', label: 'Свадебная флористика' },
+  { value: 'corporate', label: 'Корпоративный заказ' },
+  { value: 'other', label: 'Другое' },
+];
 ---
 
 
@@ -13,7 +27,7 @@ import { siteConfig } from '../../config/site';
         <div class="divider my-4 reveal reveal-delay-1"></div>
         <h2
   class="mt-6 mb-6 reveal reveal-delay-2"
-  style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.75rem, 3.5vw, 3rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.15;"
+  style="font-family: var(--font-display); font-size: clamp(1.75rem, 3.5vw, 3rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.15;"
 >
   Расскажите,<br />для кого букет
 </h2>
@@ -21,22 +35,26 @@ import { siteConfig } from '../../config/site';
           Мы подберём цветы, оттенки и упаковку под настроение, повод и бюджет.
         </p>
 
-        <div class="flex flex-col gap-5 reveal reveal-delay-4">
-          <div class="flex items-start gap-4">
-            <span class="label-tag shrink-0 mt-0.5 text-[var(--color-accent)]">ТЕЛ</span>
-            <a href={`tel:${siteConfig.contacts.phone.replace(/[\s\-()]/g, '')}`} class="text-sm hover:text-[var(--color-accent)] transition-colors duration-200">
-              {siteConfig.contacts.phone}
+        <div class="contact-direct reveal reveal-delay-4">
+          <h3 class="contact-direct-title">Связаться напрямую</h3>
+
+          <div class="contact-direct-list">
+            <a href={`tel:${siteConfig.contacts.phone.replace(/[\s\-()]/g, '')}`} class="contact-direct-link">
+              <span class="contact-direct-icon"><Icon name="phone" /></span>
+              <span>{siteConfig.contacts.phone}</span>
+            </a>
+
+            <a href="https://maps.google.com/?q=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%2C%20%D1%83%D0%BB.%20%D0%A6%D0%B2%D0%B5%D1%82%D0%BE%D1%87%D0%BD%D0%B0%D1%8F%2C%2012" class="contact-direct-link" target="_blank" rel="noreferrer">
+              <span class="contact-direct-icon"><Icon name="location" /></span>
+              <span>{siteConfig.contacts.address}</span>
             </a>
           </div>
-          <div class="flex items-start gap-4">
-            <span class="label-tag shrink-0 mt-0.5 text-[var(--color-accent)]">МАЙ</span>
-            <a href={`mailto:${siteConfig.contacts.email}`} class="text-sm hover:text-[var(--color-accent)] transition-colors duration-200">
-              {siteConfig.contacts.email}
-            </a>
-          </div>
-          <div class="flex items-start gap-4">
-            <span class="label-tag shrink-0 mt-0.5 text-[var(--color-accent)]">АДР</span>
-            <p class="text-sm text-[var(--color-fg-muted)]">{siteConfig.contacts.address}</p>
+
+          <div class="contact-socials" aria-label="Социальные сети и мессенджеры">
+            <a href={siteConfig.contacts.telegram} class="contact-social-link" aria-label="Telegram" target="_blank" rel="noreferrer"><Icon name="telegram" /></a>
+            <a href={siteConfig.contacts.whatsapp} class="contact-social-link" aria-label="WhatsApp" target="_blank" rel="noreferrer"><Icon name="whatsapp" /></a>
+            <a href={siteConfig.contacts.instagram} class="contact-social-link" aria-label="Instagram" target="_blank" rel="noreferrer"><Icon name="instagram" /></a>
+            <a href={siteConfig.contacts.vk} class="contact-social-link" aria-label="VK" target="_blank" rel="noreferrer"><Icon name="vk" /></a>
           </div>
         </div>
       </div>
@@ -48,82 +66,48 @@ import { siteConfig } from '../../config/site';
           class="flex flex-col gap-5"
           novalidate
         >
-          <!-- Name -->
-          <div class="form-field">
-            <label for="field-name" class="label-tag block mb-2">Имя *</label>
-            <input
-              id="field-name"
-              name="name"
-              type="text"
-              autocomplete="name"
-              required
-              placeholder="Ваше имя"
-              class="w-full bg-transparent border border-[var(--color-border)] px-4 py-3.5 text-sm placeholder:text-[var(--color-fg-subtle)] focus:outline-none focus:border-[var(--color-fg)] transition-colors duration-200"
-            />
-            <p class="field-error hidden text-xs text-red-500 mt-1">Пожалуйста, укажите ваше имя</p>
-          </div>
+          <TextField
+            id="field-name"
+            name="name"
+            label="Имя"
+            autocomplete="name"
+            required
+            placeholder="Ваше имя"
+            error="Пожалуйста, укажите ваше имя"
+          />
 
-          <!-- Phone -->
-          <div class="form-field">
-            <label for="field-phone" class="label-tag block mb-2">Телефон *</label>
-            <input
-              id="field-phone"
-              name="phone"
-              type="tel"
-              autocomplete="tel"
-              required
-              placeholder="+7 (___) ___-__-__"
-              class="w-full bg-transparent border border-[var(--color-border)] px-4 py-3.5 text-sm placeholder:text-[var(--color-fg-subtle)] focus:outline-none focus:border-[var(--color-fg)] transition-colors duration-200"
-            />
-            <p class="field-error hidden text-xs text-red-500 mt-1">Пожалуйста, укажите ваш телефон</p>
-          </div>
+          <PhoneField
+            id="field-phone"
+            name="phone"
+            label="Телефон"
+            required
+            error="Пожалуйста, укажите ваш телефон"
+          />
 
-          <!-- Delivery date -->
-          <div class="form-field">
-            <label for="field-date" class="label-tag block mb-2">Дата доставки <span class="text-[var(--color-fg-subtle)]">(опционально)</span></label>
-            <input
-              id="field-date"
-              name="delivery_date"
-              type="date"
-              class="w-full bg-transparent border border-[var(--color-border)] px-4 py-3.5 text-sm focus:outline-none focus:border-[var(--color-fg)] transition-colors duration-200"
-            />
-          </div>
+          <CustomSelect
+            id="field-type"
+            name="project_type"
+            label="Тип заказа"
+            placeholder="Выберите тип заказа"
+            options={orderTypes}
+            required
+            error="Пожалуйста, выберите тип заказа"
+          />
 
-          <!-- Project type -->
-          <div class="form-field">
-            <label for="field-type" class="label-tag block mb-2">Тип заказа *</label>
-            <div class="relative">
-              <select
-                id="field-type"
-                name="project_type"
-                required
-                class="w-full bg-[var(--color-bg)] border border-[var(--color-border)] px-4 py-3.5 text-sm appearance-none focus:outline-none focus:border-[var(--color-fg)] transition-colors duration-200 cursor-pointer"
-              >
-                <option value="" disabled selected>Выберите тип заказа</option>
-                <option value="ready">Готовый букет</option>
-                <option value="custom">Индивидуальный букет</option>
-                <option value="wedding">Свадебная флористика</option>
-                <option value="corporate">Корпоративный заказ</option>
-                <option value="other">Другое</option>
-              </select>
-              <svg class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--color-fg-muted)]" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                <polyline points="2,4 6,8 10,4"/>
-              </svg>
-            </div>
-            <p class="field-error hidden text-xs text-red-500 mt-1">Пожалуйста, выберите тип проекта</p>
-          </div>
+          <DatePicker
+            id="field-date"
+            name="delivery_date"
+            label="Дата доставки"
+            optionalLabel="(опционально)"
+          />
 
-          <!-- Comment -->
-          <div class="form-field">
-            <label for="field-comment" class="label-tag block mb-2">Комментарий</label>
-            <textarea
-              id="field-comment"
-              name="comment"
-              rows="4"
-              placeholder="Расскажите о поводе, пожеланиях, оттенках..."
-              class="w-full bg-transparent border border-[var(--color-border)] px-4 py-3.5 text-sm placeholder:text-[var(--color-fg-subtle)] focus:outline-none focus:border-[var(--color-fg)] transition-colors duration-200 resize-none"
-            ></textarea>
-          </div>
+          <TextareaField
+            id="field-comment"
+            name="comment"
+            label="Комментарий"
+            rows={4}
+            placeholder="Расскажите о поводе, пожеланиях, оттенках..."
+          />
 
           <!-- Privacy -->
           <div class="flex items-start gap-3">
@@ -181,6 +165,104 @@ import { siteConfig } from '../../config/site';
   </div>
 </section>
 
+<style>
+  .contact-direct {
+    max-width: 28rem;
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 70%, transparent), color-mix(in srgb, var(--color-surface) 42%, transparent));
+  }
+
+  .contact-direct-title {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 300;
+    letter-spacing: 0;
+    color: var(--color-fg);
+  }
+
+  .contact-direct-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .contact-direct-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: fit-content;
+    color: var(--color-fg-muted);
+    font-size: 0.92rem;
+    line-height: 1.45;
+    transition: color 180ms ease;
+  }
+
+  .contact-direct-link:hover,
+  .contact-direct-link:focus-visible {
+    outline: none;
+    color: var(--color-accent-dark);
+  }
+
+  :global([data-theme="dark"]) .contact-direct-link:hover,
+  :global([data-theme="dark"]) .contact-direct-link:focus-visible {
+    color: var(--color-accent);
+  }
+
+  .contact-direct-icon {
+    flex: 0 0 auto;
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 34%, var(--color-border));
+    border-radius: 999px;
+    color: var(--color-accent-dark);
+  }
+
+  :global([data-theme="dark"]) .contact-direct-icon {
+    color: var(--color-accent);
+  }
+
+  .contact-socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.15rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .contact-social-link {
+    width: 2.45rem;
+    height: 2.45rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    color: var(--color-fg-muted);
+    transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease;
+  }
+
+  .contact-social-link:hover,
+  .contact-social-link:focus-visible {
+    outline: none;
+    border-color: var(--color-accent);
+    color: var(--color-accent-dark);
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+
+  :global([data-theme="dark"]) .contact-social-link:hover,
+  :global([data-theme="dark"]) .contact-social-link:focus-visible {
+    color: var(--color-accent);
+  }
+</style>
+
 <script>
   const form = document.getElementById('contact-form') as HTMLFormElement;
   const successEl = document.getElementById('form-success')!;
@@ -205,12 +287,13 @@ import { siteConfig } from '../../config/site';
     const requiredFields = form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[required]');
     requiredFields.forEach((field) => {
       const errorEl = field.closest('.form-field')?.querySelector('.field-error') as HTMLElement | null;
+      const controlEl = form.querySelector<HTMLElement>(`[data-custom-control-for="${field.id}"]`);
       if (!field.value.trim() || (field.tagName === 'SELECT' && !field.value)) {
         valid = false;
-        field.style.borderColor = '#ef4444';
+        (controlEl || field).style.borderColor = '#ef4444';
         if (errorEl) errorEl.classList.remove('hidden');
       } else {
-        field.style.borderColor = '';
+        (controlEl || field).style.borderColor = '';
         if (errorEl) errorEl.classList.add('hidden');
       }
     });
@@ -241,6 +324,8 @@ import { siteConfig } from '../../config/site';
   form.querySelectorAll('input, select, textarea').forEach((field) => {
     field.addEventListener('input', () => {
       (field as HTMLElement).style.borderColor = '';
+      const controlEl = form.querySelector<HTMLElement>(`[data-custom-control-for="${(field as HTMLInputElement).id}"]`);
+      if (controlEl) controlEl.style.borderColor = '';
       const errorEl = field.closest('.form-field')?.querySelector('.field-error') as HTMLElement | null;
       if (errorEl) errorEl.classList.add('hidden');
     });

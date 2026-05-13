@@ -25,16 +25,16 @@ const filters = [
   <main class="pt-20">
     <section class="section-padding bg-[var(--color-bg)]">
       <div class="container-site">
-        <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">Каталог</span>
-        <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+        <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="up" data-reveal-delay="80">Каталог</span>
+        <div class="divider my-4" data-reveal="clip" data-reveal-delay="140"></div>
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mt-6">
           <h1
-            style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; letter-spacing: -0.02em; line-height: 1.05;"
-            data-reveal="up" data-reveal-delay="200"
+            style="font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; letter-spacing: -0.02em; line-height: 1.05;"
+            data-reveal="up" data-reveal-delay="180"
           >
             Каталог букетов
           </h1>
-          <p class="text-[var(--color-fg-muted)] text-sm max-w-xs leading-relaxed" data-reveal="up" data-reveal-delay="300">
+          <p class="text-[var(--color-fg-muted)] text-sm max-w-xs leading-relaxed" data-reveal="up" data-reveal-delay="260">
             Выберите готовую композицию или используйте её как основу для индивидуального заказа.
           </p>
         </div>
@@ -43,9 +43,14 @@ const filters = [
 
     <section class="section-padding" style="padding-top: 0; background-color: var(--color-bg);">
       <div class="container-site">
-        <div class="catalog-filters" role="group" aria-label="Фильтр по категории">
-          {filters.map((f) => (
-            <button class={`filter-btn ${f.value === 'all' ? 'active' : ''}`} data-filter={f.value} type="button">
+        <div class="catalog-filters" role="group" aria-label="Фильтр по категории" data-reveal="up" data-reveal-delay="320">
+          {filters.map((f, i) => (
+            <button
+              class={`filter-btn ${f.value === 'all' ? 'active' : ''}`}
+              data-filter={f.value}
+              type="button"
+              style={`--filter-delay: ${120 + i * 55}ms`}
+            >
               {f.label}
             </button>
           ))}
@@ -57,7 +62,7 @@ const filters = [
               class="catalog-card-wrap"
               data-category={bouquet.category}
               data-reveal="up"
-              data-reveal-delay={String(Math.min(i * 60, 400))}
+              data-reveal-delay={String(120 + i * 70)}
             >
               <BouquetCard bouquet={bouquet} />
             </div>
@@ -74,15 +79,15 @@ const filters = [
       <div class="container-site max-w-2xl mx-auto">
         <h2
           class="mb-5"
-          style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.75rem, 3.5vw, 2.75rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.15;"
-          data-reveal="up"
+          style="font-family: var(--font-display); font-size: clamp(1.75rem, 3.5vw, 2.75rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.15;"
+          data-reveal="up" data-reveal-delay="80"
         >
           Не нашли подходящий букет?
         </h2>
-        <p class="text-[var(--color-fg-muted)] text-base leading-relaxed mb-8" data-reveal="up" data-reveal-delay="100">
+        <p class="text-[var(--color-fg-muted)] text-base leading-relaxed mb-8" data-reveal="up" data-reveal-delay="160">
           Соберём индивидуальную композицию под ваш повод, оттенки и бюджет.
         </p>
-        <div data-reveal="up" data-reveal-delay="200">
+        <div data-reveal="up" data-reveal-delay="240">
           <Button href="/#contacts" variant="primary" size="lg">
             Оставить заявку
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -100,7 +105,7 @@ const filters = [
   .catalog-filters {
     display: flex; gap: 0.5rem; flex-wrap: nowrap;
     overflow-x: auto; -webkit-overflow-scrolling: touch;
-    padding-bottom: 0.5rem; margin-bottom: 2.5rem;
+    padding: 0.125rem 0 0.625rem; margin-bottom: 2.5rem;
     scrollbar-width: none;
   }
   .catalog-filters::-webkit-scrollbar { display: none; }
@@ -111,42 +116,99 @@ const filters = [
     padding: 0.5rem 1.125rem; border: 1px solid var(--color-border);
     background: transparent; color: var(--color-fg-muted);
     cursor: pointer; white-space: nowrap;
-    transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease;
+    opacity: 0;
+    transform: translateY(0.7rem);
+    transition:
+      opacity 620ms var(--ease-out) var(--filter-delay, 0ms),
+      transform 620ms var(--ease-out) var(--filter-delay, 0ms),
+      border-color 200ms ease,
+      color 200ms ease,
+      background-color 200ms ease,
+      box-shadow 200ms ease;
     border-radius: 2px;
   }
-  .filter-btn:hover { border-color: var(--color-accent); color: var(--color-fg); }
+  .catalog-filters.is-visible .filter-btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .filter-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-fg);
+    transform: translateY(-1px);
+  }
   .filter-btn:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
   .filter-btn.active {
     border-color: var(--color-accent); background-color: var(--color-accent);
-    color: var(--btn-primary-bg, #261818);
+    color: #261818;
+    box-shadow: 0 10px 24px rgba(138, 47, 72, 0.10);
   }
-  [data-theme="dark"] .filter-btn.active { color: #321221; }
+  :global([data-theme="dark"]) .filter-btn.active { color: #321221; }
+  :global(html:not(.js)) .filter-btn {
+    opacity: 1;
+    transform: none;
+  }
 
   .catalog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
   @media (max-width: 1023px) { .catalog-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 480px) { .catalog-grid { grid-template-columns: 1fr; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .filter-btn {
+      opacity: 1;
+      transform: none !important;
+      transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease;
+    }
+  }
 </style>
 
 <script>
-  const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
-  const cards = document.querySelectorAll<HTMLElement>('.catalog-card-wrap');
-  const noResults = document.getElementById('no-results');
+  function initCatalogFilters() {
+    const root = document.querySelector<HTMLElement>('.catalog-filters');
+    const grid = document.getElementById('catalog-grid');
+    if (!root || !grid) return;
 
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
+    const filterBtns = Array.from(root.querySelectorAll<HTMLButtonElement>('.filter-btn'));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.catalog-card-wrap'));
+    const noResults = document.getElementById('no-results');
+
+    const applyFilter = (btn: HTMLButtonElement) => {
       const cat = btn.dataset.filter ?? 'all';
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      filterBtns.forEach((b) => {
+        const active = b === btn;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', String(active));
+      });
+
       let visibleCount = 0;
-      cards.forEach(card => {
+      cards.forEach((card) => {
         const show = cat === 'all' || card.dataset.category === cat;
         card.hidden = !show;
         if (show) visibleCount++;
       });
       if (noResults) noResults.classList.toggle('hidden', visibleCount > 0);
+    };
+
+    filterBtns.forEach((btn) => {
+      btn.setAttribute('aria-pressed', String(btn.classList.contains('active')));
+      if (btn.dataset.filterBound === 'true') return;
+      btn.dataset.filterBound = 'true';
+      btn.addEventListener('click', () => applyFilter(btn));
     });
-  });
+
+    const activeBtn = filterBtns.find((btn) => btn.classList.contains('active')) ?? filterBtns[0];
+    if (activeBtn) applyFilter(activeBtn);
+  }
+
+  const catalogWindow = window as Window & { __floversCatalogFiltersBound?: boolean };
+
+  if (!catalogWindow.__floversCatalogFiltersBound) {
+    catalogWindow.__floversCatalogFiltersBound = true;
+    document.addEventListener('DOMContentLoaded', initCatalogFilters);
+    document.addEventListener('astro:page-load', initCatalogFilters);
+  }
+
+  initCatalogFilters();
 </script>

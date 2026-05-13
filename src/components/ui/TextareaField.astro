@@ -1,0 +1,64 @@
+---
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  placeholder?: string;
+  rows?: number;
+}
+
+const {
+  id,
+  name,
+  label,
+  placeholder = '',
+  rows = 4,
+} = Astro.props;
+---
+
+<div class="form-field">
+  <label for={id} class="field-label">{label}</label>
+  <textarea
+    id={id}
+    name={name}
+    rows={rows}
+    placeholder={placeholder}
+    class="form-control"
+  ></textarea>
+</div>
+
+<style>
+  .field-label {
+    display: block;
+    margin-bottom: 0.55rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+
+  .form-control {
+    width: 100%;
+    min-height: 7.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--color-surface) 62%, transparent);
+    color: var(--color-fg);
+    padding: 0.95rem 1rem;
+    font: inherit;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    resize: vertical;
+    transition: border-color 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+  }
+
+  .form-control::placeholder { color: var(--color-fg-subtle); }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 4px rgba(233, 168, 199, 0.18);
+    background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+  }
+</style>

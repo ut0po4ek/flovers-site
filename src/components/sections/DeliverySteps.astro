@@ -14,18 +14,21 @@ const steps = [
       <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
       <h2
         class="mt-6"
-        style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1;"
+        style="font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1;"
         data-reveal="up" data-reveal-delay="200"
       >
         Четыре шага<br />до вашего букета
       </h2>
     </div>
+
     <div class="steps-grid">
       {steps.map((step, i) => (
         <div class="step-item" data-reveal="up" data-reveal-delay={String(100 + i * 100)}>
-          <span class="label-tag text-[var(--color-accent)] block mb-4">{step.num}</span>
-          <h3 class="text-base font-medium mb-3 tracking-tight">{step.title}</h3>
-          <p class="text-[var(--color-fg-muted)] text-sm leading-relaxed">{step.desc}</p>
+          <span class="step-num">{step.num}</span>
+          <div class="step-body">
+            <h3 class="step-title">{step.title}</h3>
+            <p class="step-desc">{step.desc}</p>
+          </div>
         </div>
       ))}
     </div>
@@ -33,12 +36,106 @@ const steps = [
 </section>
 
 <style>
-  .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; position: relative; }
-  .steps-grid::before {
-    content: ''; position: absolute; top: 0.75rem; left: 2.5rem; right: 2.5rem;
-    height: 1px; background: var(--color-border); z-index: 0;
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
   }
-  .step-item { position: relative; }
-  @media (max-width: 1023px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } .steps-grid::before { display: none; } }
-  @media (max-width: 480px) { .steps-grid { grid-template-columns: 1fr; } }
+
+  .step-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 240px;
+    padding: clamp(1.25rem, 2vw, 1.65rem);
+    background:
+      linear-gradient(180deg, rgba(255, 250, 246, 0.74), rgba(255, 250, 246, 0.42));
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 260ms ease, transform 260ms ease, background-color 260ms ease;
+  }
+  :global([data-theme="dark"]) .step-item {
+    background:
+      linear-gradient(180deg, rgba(90, 31, 50, 0.24), rgba(90, 31, 50, 0.16));
+    border-color: rgba(244, 179, 210, 0.16);
+  }
+  .step-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 1.25rem;
+    right: 1.25rem;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-accent), transparent);
+    transform: scaleX(0.34);
+    transform-origin: left;
+    transition: transform 420ms var(--ease-out);
+  }
+  .step-item:hover {
+    transform: translateY(-3px);
+    border-color: rgba(233, 168, 199, 0.52);
+  }
+  :global([data-theme="dark"]) .step-item:hover {
+    border-color: rgba(244, 179, 210, 0.34);
+    background:
+      linear-gradient(180deg, rgba(90, 31, 50, 0.30), rgba(90, 31, 50, 0.21));
+  }
+  .step-item:hover::before,
+  .step-item.is-visible::before {
+    transform: scaleX(1);
+  }
+
+  .step-num {
+    font-family: var(--font-display);
+    font-size: clamp(2.75rem, 4.8vw, 4.25rem);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    color: var(--color-accent-dark);
+    opacity: 0.58;
+    margin-bottom: auto;
+  }
+  :global([data-theme="dark"]) .step-num {
+    color: rgba(244, 179, 210, 0.82);
+    opacity: 1;
+  }
+
+  .step-body {
+    padding-top: 2rem;
+  }
+
+  .step-title {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-fg);
+    margin: 0 0 0.7rem;
+  }
+
+  .step-desc {
+    font-size: 0.875rem;
+    line-height: 1.68;
+    color: var(--color-fg-muted);
+    margin: 0;
+  }
+
+  /* Tablet: 2 columns */
+  @media (max-width: 1023px) {
+    .steps-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    .step-item { min-height: 220px; }
+  }
+
+  /* Mobile: single column, vertical */
+  @media (max-width: 480px) {
+    .steps-grid {
+      grid-template-columns: 1fr;
+      gap: 0.875rem;
+    }
+    .step-item { min-height: 0; }
+    .step-body { padding-top: 1.5rem; }
+  }
 </style>

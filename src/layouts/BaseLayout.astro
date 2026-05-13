@@ -68,7 +68,7 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,ital,wght@6..96,0,400;6..96,0,500;6..96,1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
 
@@ -79,51 +79,154 @@ const {
     <slot />
 
     <script>
+      let revealObserver: IntersectionObserver | null = null;
+      let legacyRevealObserver: IntersectionObserver | null = null;
+      let revealFrame = 0;
+      let revealTimer = 0;
+      let revealAfterTransition = false;
+
+      function disconnectRevealObservers() {
+        revealObserver?.disconnect();
+        legacyRevealObserver?.disconnect();
+        revealObserver = null;
+        legacyRevealObserver = null;
+      }
+
+      function setRevealDelay(el: HTMLElement) {
+        const raw = el.dataset.revealDelay;
+        const delay = raw ? Number.parseInt(raw, 10) : 0;
+        el.style.transitionDelay = Number.isFinite(delay) && delay > 0 ? `${delay}ms` : '';
+      }
+
+      function revealElement(el: HTMLElement) {
+        if (el.classList.contains('is-visible')) return;
+
+        setRevealDelay(el);
+        el.dataset.revealBound = 'true';
+
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            el.classList.add('is-visible');
+          });
+        });
+      }
+
+      function isElementInViewport(el: Element) {
+        const rect = el.getBoundingClientRect();
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+
+        return rect.bottom > 0 && rect.right > 0 && rect.top < viewportHeight && rect.left < viewportWidth;
+      }
+
       function initReveal() {
+        if (revealAfterTransition) return;
+
+        window.clearTimeout(revealTimer);
+        window.cancelAnimationFrame(revealFrame);
+        revealFrame = window.requestAnimationFrame(runReveal);
+      }
+
+      function initRevealAfterViewTransition() {
+        if (!revealAfterTransition) return;
+
+        revealAfterTransition = false;
+        window.clearTimeout(revealTimer);
+        window.cancelAnimationFrame(revealFrame);
+        revealTimer = window.setTimeout(runReveal, 280);
+      }
+
+      function runReveal() {
         const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         if (reduced) {
-          document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible', 'is-visible'));
-          document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('is-visible'));
+          disconnectRevealObservers();
+          document.querySelectorAll<HTMLElement>('.reveal').forEach(el => {
+            el.style.transitionDelay = '0ms';
+            el.classList.add('visible', 'is-visible');
+          });
+          document.querySelectorAll<HTMLElement>('[data-reveal]').forEach(el => {
+            el.style.transitionDelay = '0ms';
+            el.classList.add('is-visible');
+          });
           return;
         }
 
-        const dataRevealEls = document.querySelectorAll('[data-reveal]:not(.is-visible)');
-        const newObserver = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                const el = entry.target as HTMLElement;
-                const delay = el.dataset.revealDelay;
-                if (delay) {
-                  el.style.transitionDelay = delay + 'ms';
-                }
-                el.classList.add('is-visible');
-                newObserver.unobserve(el);
-              }
-            });
-          },
-          { threshold: 0.08, rootMargin: '0px 0px -50px 0px' }
-        );
-        dataRevealEls.forEach(el => newObserver.observe(el));
+        if (!revealObserver) {
+          revealObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
 
-        const revealElements = document.querySelectorAll('.reveal:not(.visible):not(.is-visible)');
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
+                const el = entry.target as HTMLElement;
+                revealElement(el);
+                revealObserver?.unobserve(el);
+              });
+            },
+            { threshold: 0.08, rootMargin: '0px 0px -48px 0px' }
+          );
+        }
+
+        document.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-visible)').forEach((el) => {
+          if (el.dataset.revealBound === 'true' && revealObserver) return;
+
+          setRevealDelay(el);
+          el.dataset.revealBound = 'true';
+
+          if (isElementInViewport(el)) {
+            revealElement(el);
+          } else {
+            revealObserver?.observe(el);
+          }
+        });
+
+        if (!legacyRevealObserver) {
+          legacyRevealObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+
                 entry.target.classList.add('visible', 'is-visible');
-                observer.unobserve(entry.target);
-              }
+                legacyRevealObserver?.unobserve(entry.target);
+              });
+            },
+            { threshold: 0.1, rootMargin: '0px 0px -56px 0px' }
+          );
+        }
+
+        document.querySelectorAll<HTMLElement>('.reveal:not(.visible):not(.is-visible)').forEach((el) => {
+          if (el.dataset.revealBound === 'true' && legacyRevealObserver) return;
+
+          el.dataset.revealBound = 'true';
+          if (isElementInViewport(el)) {
+            window.requestAnimationFrame(() => {
+              window.requestAnimationFrame(() => el.classList.add('visible', 'is-visible'));
             });
-          },
-          { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
-        );
-        revealElements.forEach((el) => observer.observe(el));
+          } else {
+            legacyRevealObserver?.observe(el);
+          }
+        });
       }
 
-      initReveal();
+      document.addEventListener('astro:before-swap', () => {
+        disconnectRevealObservers();
+        window.clearTimeout(revealTimer);
+        window.cancelAnimationFrame(revealFrame);
+        revealAfterTransition = true;
+
+        document.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-visible)').forEach(el => {
+          delete el.dataset.revealBound;
+          el.style.transitionDelay = '';
+        });
+      });
+      document.addEventListener('astro:after-swap', () => {
+        if (!revealAfterTransition) return;
+        window.clearTimeout(revealTimer);
+        revealTimer = window.setTimeout(initRevealAfterViewTransition, 520);
+      });
+      document.addEventListener('DOMContentLoaded', initReveal);
       document.addEventListener('astro:page-load', initReveal);
+      initReveal();
     </script>
   </body>
 </html>

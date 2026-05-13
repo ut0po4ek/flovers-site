@@ -7,17 +7,27 @@ import Button from '../ui/Button.astro';
   class="hero-section relative overflow-hidden"
   aria-label="Главный экран"
 >
+  <!-- TOP: dark green with hero image -->
   <div class="hero-top">
     <div class="hero-photo-bg" aria-hidden="true">
       <img
-        src="https://images.unsplash.com/photo-1495841674375-6f5de87aab5c?w=1600&q=80&auto=format&fit=crop"
+        src="https://images.unsplash.com/photo-1771085417618-c69f6209e540?ixlib=rb-4.1.0&w=1800&q=86&fm=jpg&crop=entropy&cs=srgb&auto=format&fit=crop"
         alt=""
-        width="1600"
-        height="1067"
+        width="1800"
+        height="1013"
         fetchpriority="high"
         loading="eager"
         decoding="sync"
-        class="hero-bg-img"
+        class="hero-bg-img hero-bg-img-dark"
+      />
+      <img
+        src="https://images.unsplash.com/photo-1558021843-f9ab317ed0eb?ixlib=rb-4.1.0&w=1800&q=84&fm=jpg&crop=entropy&cs=srgb&auto=format&fit=crop"
+        alt=""
+        width="1800"
+        height="1200"
+        loading="eager"
+        decoding="async"
+        class="hero-bg-img hero-bg-img-light"
       />
       <div class="hero-photo-overlay" aria-hidden="true"></div>
     </div>
@@ -27,6 +37,7 @@ import Button from '../ui/Button.astro';
         <span class="label-tag" style="color: var(--glass-hero-text-m);">Авторская флористика · Москва</span>
       </div>
 
+      <!-- Title overflows into bottom section via negative margin -->
       <h1 class="hero-title" aria-label="Создаём любовь через цветы">
         <span class="hero-line-wrap" aria-hidden="true">
           <span class="hero-line hero-line-1">Создаём</span>
@@ -38,37 +49,60 @@ import Button from '../ui/Button.astro';
           <span class="hero-line hero-line-3">через цветы</span>
         </span>
       </h1>
-
-      <p class="hero-sub">
-        Авторские букеты, сезонные композиции<br class="hidden md:block" />
-        и доставка цветов для важных моментов.
-      </p>
-
-      <div class="hero-btns">
-        <Button href="/catalog" variant="accent" size="md">
-          Перейти в каталог
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <line x1="0" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/>
-          </svg>
-        </Button>
-        <Button href="/#contacts" variant="secondary" size="md">Собрать букет</Button>
-      </div>
     </div>
   </div>
 
+  <!-- BOTTOM: burgundy section with CTA and decorative photos -->
   <div class="hero-bottom">
     <div class="container-site hero-bottom-inner">
-      <div class="hero-bottom-text">
-        <p class="hero-bottom-tagline">
-          Мы выращиваем цветы с любовью и вниманием, специально для вас. Трепетно относимся к каждому букету.
+      <div class="hero-bottom-left">
+        <!-- Sub text -->
+        <p class="hero-sub">
+          Мы выращиваем наши цветы с любовью и вниманием,<br />
+          специально для вас. Трепетно относимся к доставке<br />
+          и доставляем вам эстетическое удовольствие.
         </p>
-      </div>
-      <div class="hero-photos" aria-hidden="true">
-        <div class="hero-photo-card hero-photo-card-1">
-          <img src="https://images.unsplash.com/photo-1490750967868-88df5691cc26?w=600&q=75&auto=format&fit=crop" alt="" width="600" height="800" loading="lazy" decoding="async" class="hero-photo-img" />
+
+        <!-- CTA buttons live in the bottom section -->
+        <div class="hero-btns">
+          <Button href="/catalog" variant="accent" size="md">
+            Перейти в каталог
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <line x1="0" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/>
+            </svg>
+          </Button>
+          <Button href="/#contacts" variant="secondary" size="md">Собрать букет</Button>
         </div>
+
+        <div class="hero-photo-card hero-photo-card-1" aria-hidden="true">
+          <img
+            src="https://images.unsplash.com/photo-1680563899402-26c3a712831f?ixlib=rb-4.1.0&w=720&q=78&fm=jpg&crop=entropy&cs=srgb&auto=format&fit=crop"
+            alt=""
+            width="720"
+            height="480"
+            loading="lazy"
+            decoding="async"
+            class="hero-photo-img"
+          />
+        </div>
+      </div>
+
+      <div class="hero-deco" aria-hidden="true">
+        <div class="hero-deco-circle"></div>
+        <div class="hero-deco-line"></div>
+      </div>
+
+      <div class="hero-bottom-right" aria-hidden="true">
         <div class="hero-photo-card hero-photo-card-2">
-          <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=600&q=75&auto=format&fit=crop" alt="" width="600" height="800" loading="lazy" decoding="async" class="hero-photo-img" />
+          <img
+            src="https://images.unsplash.com/photo-1673026448806-6d6c00bbba29?ixlib=rb-4.1.0&w=900&q=80&fm=jpg&crop=entropy&cs=srgb&auto=format&fit=crop"
+            alt=""
+            width="900"
+            height="1350"
+            loading="lazy"
+            decoding="async"
+            class="hero-photo-img"
+          />
         </div>
       </div>
     </div>
@@ -76,50 +110,110 @@ import Button from '../ui/Button.astro';
 </section>
 
 <style>
-  .hero-section { display: flex; flex-direction: column; }
+  .hero-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+  }
 
+  .hero-section::before,
+  .hero-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: transparent;
+  }
+
+  :global([data-theme="light"]) .hero-section::before {
+    background: radial-gradient(
+      ellipse at 42% 58%,
+      rgba(16, 25, 21, 0.20) 0%,
+      rgba(16, 25, 21, 0.08) 42%,
+      rgba(16, 25, 21, 0.00) 76%
+    );
+  }
+
+  :global([data-theme="dark"]) .hero-section::after {
+    inset: auto 0 0;
+    height: 35%;
+    background: linear-gradient(
+      to top,
+      rgba(255, 244, 238, 0.04) 0%,
+      rgba(255, 244, 238, 0.015) 38%,
+      rgba(255, 244, 238, 0.00) 100%
+    );
+  }
+
+  /* ── TOP ──────────────────────────────────────── */
   .hero-top {
     position: relative;
-    min-height: 70vh;
-    min-height: 70svh;
+    min-height: 68vh;
+    min-height: 68svh;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     background-color: #101915;
-    overflow: hidden;
+    overflow: visible; /* allow title to overflow into bottom */
+    z-index: auto;
   }
   :global([data-theme="light"]) .hero-top { background-color: #eef4ef; }
 
-  .hero-photo-bg { position: absolute; inset: 0; z-index: 0; }
+  .hero-photo-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 
   .hero-bg-img {
+    position: absolute;
+    inset: 0;
     width: 100%; height: 100%;
-    object-fit: cover; object-position: center 30%;
+    object-fit: cover; object-position: center 46%;
     display: block;
-    opacity: 0; transform: scale(1.04);
-    transition: opacity 1.4s cubic-bezier(0.16,1,0.3,1) 0.1s, transform 1.8s cubic-bezier(0.16,1,0.3,1) 0.1s;
+    opacity: 0; transform: scale(1.035);
+    transition:
+      opacity 1.45s var(--ease-out) 0.1s,
+      transform 1.65s var(--ease-out) 0.1s;
+    will-change: opacity, transform;
+  }
+  .hero-bg-img-light {
+    object-position: center 50%;
+    opacity: 0;
   }
 
   .hero-photo-overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(to bottom, rgba(10,20,14,0.45) 0%, rgba(10,20,14,0.15) 40%, rgba(10,20,14,0.70) 100%);
+    background: rgba(8, 14, 10, 0.10);
+    pointer-events: none;
   }
   :global([data-theme="light"]) .hero-photo-overlay {
-    background: linear-gradient(to bottom, rgba(238,244,239,0.30) 0%, rgba(238,244,239,0.05) 40%, rgba(238,244,239,0.55) 100%);
+    background: rgba(251, 246, 241, 0.06);
   }
 
-  .hero-content { position: relative; z-index: 10; padding-top: 7rem; padding-bottom: 3rem; }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding-top: 8rem;
+    padding-bottom: 0;
+    margin-bottom: -5.8rem;
+  }
 
   .hero-eyebrow {
     margin-bottom: 1.5rem; opacity: 0; transform: translateY(0.5rem);
     transition: opacity 0.8s var(--ease-out) 0.3s, transform 0.8s var(--ease-out) 0.3s;
   }
 
+  /* ── TITLE crosses the boundary ──────────────── */
   .hero-title {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 300; font-size: clamp(3rem, 7vw, 6.5rem);
-    line-height: 1.05; letter-spacing: -0.01em;
-    color: #fff4ee; margin: 0 0 1.5rem; max-width: 16ch;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(4rem, 8.8vw, 8.6rem);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    color: #fff4ee;
+    margin: 0;
+    max-width: 12.6ch;
+    position: relative;
+    z-index: 20;
+    text-wrap: balance;
   }
   :global([data-theme="light"]) .hero-title { color: #261818; }
 
@@ -135,9 +229,40 @@ import Button from '../ui/Button.astro';
   .hero-line-2 { transition-delay: 0.60s; }
   .hero-line-3 { transition-delay: 0.75s; }
 
+  /* ── BOTTOM ───────────────────────────────────── */
+  .hero-bottom {
+    background-color: #5a1f32;
+    position: relative;
+    z-index: auto;
+    transform: translateY(2rem); opacity: 0;
+    transition: opacity 0.9s var(--ease-out) 0.15s, transform 0.9s var(--ease-out) 0.15s;
+  }
+  :global([data-theme="light"]) .hero-bottom { background-color: #f3e8e1; }
+
+  .hero-bottom-inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 0.86fr) clamp(6rem, 10vw, 9rem) minmax(360px, 0.9fr);
+    align-items: stretch;
+    gap: clamp(2rem, 4vw, 4rem);
+    padding-top: clamp(7rem, 11vw, 10rem);
+    padding-bottom: clamp(3rem, 6vw, 5.25rem);
+    min-height: clamp(520px, 48vw, 680px);
+  }
+
+  .hero-bottom-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    gap: 1.65rem;
+  }
+
   .hero-sub {
-    color: rgba(255,244,238,0.72); font-size: clamp(0.875rem, 1.5vw, 1.125rem);
-    line-height: 1.7; margin: 0 0 2.5rem; max-width: 38ch;
+    color: rgba(255,244,238,0.72);
+    font-size: clamp(0.75rem, 1.3vw, 0.9375rem);
+    line-height: 1.7;
+    margin: 0;
     opacity: 0; transform: translateY(1rem);
     transition: opacity 0.9s var(--ease-out) 0.9s, transform 0.9s var(--ease-out) 0.9s;
   }
@@ -149,57 +274,145 @@ import Button from '../ui/Button.astro';
     transition: opacity 0.9s var(--ease-out) 1.05s, transform 0.9s var(--ease-out) 1.05s;
   }
 
-  .hero-bottom {
-    background-color: #5a1f32;
-    transform: translateY(2rem); opacity: 0;
-    transition: opacity 0.9s var(--ease-out) 0.15s, transform 0.9s var(--ease-out) 0.15s;
-  }
-  :global([data-theme="light"]) .hero-bottom { background-color: #f3e8e1; }
-
-  .hero-bottom-inner {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 2rem; padding-top: 2rem; padding-bottom: 2rem;
+  /* ── RIGHT COLUMN: deco + photos ─────────────── */
+  .hero-bottom-right {
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    min-width: 0;
   }
 
-  .hero-bottom-text { flex: 1; max-width: 38ch; }
-  .hero-bottom-tagline {
-    font-size: 0.8125rem; line-height: 1.65;
-    color: rgba(255,244,238,0.72); margin: 0;
+  /* Decorative circle + vertical line */
+  .hero-deco {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.8s var(--ease-out) 1.2s;
   }
-  :global([data-theme="light"]) .hero-bottom-tagline { color: rgba(38,24,24,0.68); }
+  .hero-deco-circle {
+    width: clamp(96px, 9vw, 132px); height: clamp(96px, 9vw, 132px);
+    border: 1px solid rgba(255,244,238,0.34);
+    border-radius: 50%;
+    transform: scale(0.72);
+    transition: transform 0.8s var(--ease-out) 1.25s, opacity 0.8s var(--ease-out) 1.25s;
+  }
+  :global([data-theme="light"]) .hero-deco-circle {
+    border-color: rgba(138,47,72,0.30);
+  }
+  .hero-deco-line {
+    width: 1px;
+    height: clamp(180px, 23vw, 320px);
+    background: rgba(244,179,210,0.30);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 1s var(--ease-out) 1.45s;
+  }
+  :global([data-theme="light"]) .hero-deco-line {
+    background: rgba(138,47,72,0.22);
+  }
 
-  .hero-photos {
-    display: flex; gap: 0.75rem; flex-shrink: 0;
-    opacity: 0; transition: opacity 0.9s var(--ease-out) 0.3s;
+  .hero-photo-card-1 {
+    width: clamp(360px, 35vw, 460px);
+    height: clamp(150px, 24.5vw, 290px);
+    border-radius: 56px 0 56px 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(1rem);
+    transition: opacity 0.9s var(--ease-out) 1.12s, transform 0.9s var(--ease-out) 1.12s;
   }
-  .hero-photo-card {
-    width: 90px; height: 120px; border-radius: 8px;
-    overflow: hidden; flex-shrink: 0;
+
+  .hero-photo-card-2 {
+    width: min(100%, 520px);
+    min-height: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: 0 56px 0 56px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition: opacity 1s var(--ease-out) 0.72s, transform 1s var(--ease-out) 0.72s;
   }
-  .hero-photo-card-1 { transition-delay: 0.2s; }
-  .hero-photo-card-2 { transition-delay: 0.35s; }
+
   .hero-photo-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+  /* ── ANIMATED STATE ───────────────────────────── */
   .hero-animate .hero-line      { transform: translateY(0); opacity: 1; }
   .hero-animate .hero-eyebrow   { opacity: 1; transform: translateY(0); }
   .hero-animate .hero-sub       { opacity: 1; transform: translateY(0); }
   .hero-animate .hero-btns      { opacity: 1; transform: translateY(0); }
   .hero-animate .hero-bottom    { opacity: 1; transform: translateY(0); }
-  .hero-animate .hero-photos    { opacity: 1; }
-  .hero-animate .hero-bg-img    { opacity: 1; transform: scale(1); }
+  .hero-animate .hero-photo-card-1,
+  .hero-animate .hero-photo-card-2 { opacity: 1; transform: translateY(0); }
+  .hero-animate .hero-bg-img-dark { opacity: 1; transform: scale(1); }
+  .hero-animate .hero-bg-img-light { transform: scale(1); }
+  :global([data-theme="light"]) .hero-animate .hero-bg-img-dark { opacity: 0; }
+  :global([data-theme="light"]) .hero-animate .hero-bg-img-light { opacity: 1; }
+  :global([data-theme="dark"]) .hero-animate .hero-bg-img-light { opacity: 0; }
+  .hero-animate .hero-deco      { opacity: 1; }
+  .hero-animate .hero-deco-circle { transform: scale(1); }
+  .hero-animate .hero-deco-line { transform: scaleY(1); }
 
-  @media (max-width: 640px) {
-    .hero-title { font-size: clamp(2.75rem, 12vw, 4rem); }
-    .hero-bottom-inner { flex-direction: column; align-items: flex-start; }
-    .hero-photos { width: 100%; justify-content: flex-start; }
-    .hero-photo-card { width: 80px; height: 105px; }
+  /* ── RESPONSIVE ────────────────────────────────── */
+  @media (max-width: 768px) {
+    .hero-top { min-height: 62svh; }
+    .hero-content { margin-bottom: -3.25rem; }
+    .hero-bottom-inner {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      padding-top: 5rem;
+    }
+    .hero-bottom-right {
+      justify-content: flex-start;
+    }
+    .hero-title {
+      font-size: clamp(2.15rem, 10.6vw, 5.1rem);
+      max-width: calc(100vw - 2.5rem);
+      width: 100%;
+      margin-left: -6rem;
+      text-align: left;
+      text-wrap: wrap;
+    }
+    .hero-line-wrap { overflow: visible; }
+    :global(#hero .hero-title),
+    :global(#hero .hero-title *) { text-align: left !important; }
+    .hero-sub {
+      width: min(100%, calc(100vw - 2.5rem));
+      max-width: calc(100vw - 2.5rem);
+      overflow-wrap: break-word;
+    }
+    .hero-sub br { display: none; }
+    .hero-btns { flex-direction: column; align-items: stretch; max-width: 22rem; }
+    .hero-btns :global(.btn) { width: 100%; }
+    .hero-photo-card-1 { width: min(100%, 420px); height: auto; aspect-ratio: 16 / 7; }
+    .hero-photo-card-2 {
+      width: min(100%, 420px);
+      min-height: 360px;
+      max-height: 500px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-content { margin-bottom: -2.25rem; padding-top: 7rem; }
+    .hero-eyebrow { margin-left: -6rem; width: calc(100% + 6rem); }
+    .hero-title { width: calc(100% + 6rem); }
+    .hero-title { font-size: clamp(2.05rem, 10.2vw, 3.1rem); line-height: 0.98; letter-spacing: -0.04em; }
+    .hero-deco { display: none; }
+    .hero-bottom-inner { padding-top: 4.25rem; gap: 1.8rem; }
+    .hero-photo-card-1 { width: min(100%, 320px); height: auto; aspect-ratio: 16 / 9; }
+    .hero-photo-card-2 { width: 100%; min-height: 330px; border-radius: 0 56px 0 56px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-line, .hero-eyebrow, .hero-sub, .hero-btns,
-    .hero-bottom, .hero-photos, .hero-bg-img {
-      opacity: 1 !important; transform: none !important; transition: none !important;
+    .hero-bottom, .hero-bg-img, .hero-deco,
+    .hero-deco-circle, .hero-deco-line, .hero-photo-card-1, .hero-photo-card-2 {
+      opacity: 1 !important; transform: none !important;
+      transition: none !important;
     }
+    :global([data-theme="light"]) .hero-bg-img-dark { opacity: 0 !important; }
+    :global([data-theme="dark"]) .hero-bg-img-light { opacity: 0 !important; }
+    .hero-deco-line { transform: scaleY(1) !important; }
   }
 </style>
 

@@ -1,0 +1,277 @@
+---
+interface Option {
+  label: string;
+  value: string;
+}
+
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  placeholder: string;
+  options: Option[];
+  required?: boolean;
+  error?: string;
+}
+
+const {
+  id,
+  name,
+  label,
+  placeholder,
+  options,
+  required = false,
+  error,
+} = Astro.props;
+---
+
+<div class="form-field custom-select" data-custom-select>
+  <label id={`${id}-label`} class="field-label">
+    {label}{required && <span aria-hidden="true"> *</span>}
+  </label>
+
+  <input
+    id={id}
+    name={name}
+    type="hidden"
+    required={required}
+    aria-describedby={error ? `${id}-error` : undefined}
+    data-custom-value
+  />
+
+  <button
+    type="button"
+    class="select-trigger"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    aria-labelledby={`${id}-label ${id}-value`}
+    data-custom-control-for={id}
+    data-select-trigger
+  >
+    <span id={`${id}-value`} class="select-value is-placeholder" data-select-value>{placeholder}</span>
+    <svg class="select-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <polyline points="3,5 7,9 11,5"></polyline>
+    </svg>
+  </button>
+
+  <div class="select-menu" role="listbox" tabindex="-1" hidden data-select-menu>
+    {options.map((option) => (
+      <button
+        type="button"
+        class="select-option"
+        role="option"
+        data-value={option.value}
+        aria-selected="false"
+      >
+        {option.label}
+      </button>
+    ))}
+  </div>
+
+  {error && <p id={`${id}-error`} class="field-error hidden">{error}</p>}
+</div>
+
+<style>
+  .custom-select { position: relative; }
+
+  .field-label {
+    display: block;
+    margin-bottom: 0.55rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+
+  .select-trigger {
+    width: 100%;
+    min-height: 3.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--color-surface) 66%, transparent);
+    color: var(--color-fg);
+    padding: 0.9rem 1rem;
+    font: inherit;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    text-align: left;
+    transition: border-color 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+  }
+
+  .select-trigger:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 42%, var(--color-border));
+  }
+
+  .select-trigger:focus-visible,
+  .custom-select.is-open .select-trigger {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 4px rgba(233, 168, 199, 0.18);
+    background: color-mix(in srgb, var(--color-surface) 84%, transparent);
+  }
+
+  .select-value {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .select-value.is-placeholder { color: var(--color-fg-subtle); }
+
+  .select-arrow {
+    flex: 0 0 auto;
+    color: var(--color-fg-muted);
+    transition: transform 180ms ease, color 180ms ease;
+  }
+
+  .custom-select.is-open .select-arrow {
+    color: var(--color-accent-dark);
+    transform: rotate(180deg);
+  }
+
+  .select-menu {
+    position: absolute;
+    z-index: 30;
+    left: 0;
+    right: 0;
+    top: calc(100% + 0.45rem);
+    padding: 0.35rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-surface);
+    box-shadow: 0 18px 48px rgba(38, 24, 24, 0.14);
+  }
+
+  :global([data-theme="dark"]) .select-menu {
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+  }
+
+  .select-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    min-height: 2.5rem;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--color-fg-muted);
+    padding: 0.65rem 0.75rem;
+    font: inherit;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    text-align: left;
+    transition: background-color 160ms ease, color 160ms ease;
+  }
+
+  .select-option:hover,
+  .select-option:focus,
+  .select-option[aria-selected="true"] {
+    outline: none;
+    background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+    color: var(--color-fg);
+  }
+
+  .field-error {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: #ef4444;
+  }
+</style>
+
+<script>
+  function initCustomSelects() {
+    document.querySelectorAll<HTMLElement>('[data-custom-select]').forEach((root) => {
+      if (root.dataset.selectReady === 'true') return;
+      root.dataset.selectReady = 'true';
+
+      const input = root.querySelector<HTMLInputElement>('[data-custom-value]');
+      const trigger = root.querySelector<HTMLButtonElement>('[data-select-trigger]');
+      const valueEl = root.querySelector<HTMLElement>('[data-select-value]');
+      const menu = root.querySelector<HTMLElement>('[data-select-menu]');
+      const options = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="option"]'));
+      if (!input || !trigger || !valueEl || !menu || !options.length) return;
+
+      let activeIndex = -1;
+
+      const close = () => {
+        root.classList.remove('is-open');
+        trigger.setAttribute('aria-expanded', 'false');
+        menu.hidden = true;
+      };
+
+      const open = () => {
+        root.classList.add('is-open');
+        trigger.setAttribute('aria-expanded', 'true');
+        menu.hidden = false;
+        activeIndex = Math.max(0, options.findIndex((option) => option.dataset.value === input.value));
+        options[activeIndex]?.focus();
+      };
+
+      const selectOption = (option: HTMLButtonElement) => {
+        input.value = option.dataset.value || '';
+        valueEl.textContent = option.textContent?.trim() || '';
+        valueEl.classList.toggle('is-placeholder', !input.value);
+        options.forEach((item) => item.setAttribute('aria-selected', String(item === option)));
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        close();
+        trigger.focus();
+      };
+
+      trigger.addEventListener('click', () => {
+        menu.hidden ? open() : close();
+      });
+
+      trigger.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          open();
+        }
+      });
+
+      menu.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          close();
+          trigger.focus();
+          return;
+        }
+
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          const step = event.key === 'ArrowDown' ? 1 : -1;
+          activeIndex = (activeIndex + step + options.length) % options.length;
+          options[activeIndex]?.focus();
+          return;
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          const option = document.activeElement as HTMLButtonElement;
+          if (options.includes(option)) selectOption(option);
+        }
+      });
+
+      options.forEach((option) => {
+        option.addEventListener('click', () => selectOption(option));
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!root.contains(event.target as Node)) close();
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCustomSelects, { once: true });
+  } else {
+    initCustomSelects();
+  }
+  document.addEventListener('astro:page-load', initCustomSelects);
+</script>

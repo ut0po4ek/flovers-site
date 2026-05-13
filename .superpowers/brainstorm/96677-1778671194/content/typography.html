@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Типографика FLOVERS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Marcellus&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1910; color: #fff4ee; font-family: 'Inter', sans-serif; }
+
+  .page-header {
+    padding: 28px 32px 0;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .page-header h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: #a89080;
+  }
+  .page-header p { font-size: 0.75rem; color: #5a4a40; letter-spacing: 0.06em; margin-top: 4px; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 20px 24px 32px;
+  }
+
+  .card {
+    border: 1.5px solid #1e2e22;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.18s;
+    background: #101915;
+  }
+  .card:hover { border-color: #7a4a5a; transform: translateY(-2px); }
+  .card.selected {
+    border-color: #f4b3d2 !important;
+    box-shadow: 0 0 0 1px #f4b3d2, 0 8px 32px rgba(244,179,210,0.12);
+  }
+
+  .card-preview {
+    background: #101915;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px 20px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Decorative bg rose */
+  .card-preview::before {
+    content: '🌹';
+    position: absolute;
+    top: -10px; right: -10px;
+    font-size: 90px;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.5rem; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,244,238,0.4);
+    margin-bottom: 12px;
+  }
+
+  /* Font A: Cormorant Garamond — thin, refined */
+  .title-a {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 2.4rem;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: #fff4ee;
+  }
+  .title-a em { color: #f4b3d2; font-style: italic; }
+
+  /* Font B: Playfair Display — bold editorial */
+  .title-b {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: #fff4ee;
+  }
+  .title-b em { color: #f4b3d2; font-style: italic; }
+
+  /* Font C: Marcellus — antique, floral */
+  .title-c {
+    font-family: 'Marcellus', serif;
+    font-weight: 400;
+    font-size: 2.1rem;
+    line-height: 1.12;
+    letter-spacing: 0em;
+    color: #fff4ee;
+  }
+  .title-c em { color: #f4b3d2; font-style: normal; }
+
+  .subtitle-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.62rem;
+    line-height: 1.6;
+    color: rgba(255,244,238,0.55);
+    margin-top: 10px;
+    max-width: 200px;
+  }
+
+  .mini-btn {
+    margin-top: 14px;
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.5rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: #f4b3d2;
+    color: #321221;
+    padding: 5px 12px;
+  }
+
+  .card-meta {
+    padding: 12px 16px;
+    background: #0c1410;
+    border-top: 1px solid #1e2e22;
+  }
+  .card-label {
+    font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: #7a6a5a; margin-bottom: 3px;
+  }
+  .card-name { font-size: 0.72rem; font-weight: 500; color: #c4b0a0; margin-bottom: 3px; }
+  .card-desc { font-size: 0.68rem; color: #5a4a40; line-height: 1.45; }
+
+  /* Select indicator */
+  .select-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: #1a1210;
+    border-top: 1px solid #2a2018;
+    padding: 10px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.7rem; color: #7a6a5a;
+    z-index: 100;
+  }
+  .select-bar span.selected-label { color: #f4b3d2; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h2>Типографика заголовка</h2>
+  <p>Выберите шрифт для hero-заголовка и всех H1/H2 на сайте</p>
+</div>
+
+<div class="cards">
+
+  <!-- A: Cormorant Garamond -->
+  <div class="card" data-choice="a" onclick="selectCard(this)">
+    <div class="card-preview">
+      <div class="eyebrow">Авторская флористика</div>
+      <div class="title-a">Создаём<br><em>любовь</em><br>через цветы</div>
+      <div class="subtitle-text">Авторские букеты, сезонные композиции и доставка цветов для важных моментов.</div>
+      <div class="mini-btn">Перейти в каталог</div>
+    </div>
+    <div class="card-meta">
+      <div class="card-label">Вариант A</div>
+      <div class="card-name">Cormorant Garamond Light</div>
+      <div class="card-desc">Утончённый, невесомый. Очень близко к духу первого референса. Французский boutique.</div>
+    </div>
+  </div>
+
+  <!-- B: Playfair Display -->
+  <div class="card" data-choice="b" onclick="selectCard(this)">
+    <div class="card-preview">
+      <div class="eyebrow">Авторская флористика</div>
+      <div class="title-b">Создаём<br><em>любовь</em><br>через цветы</div>
+      <div class="subtitle-text">Авторские букеты, сезонные композиции и доставка цветов для важных моментов.</div>
+      <div class="mini-btn">Перейти в каталог</div>
+    </div>
+    <div class="card-meta">
+      <div class="card-label">Вариант B</div>
+      <div class="card-name">Playfair Display Bold Italic</div>
+      <div class="card-desc">Сильный editorial. Узнаваемая классика. Выглядит как luxury magazine.</div>
+    </div>
+  </div>
+
+  <!-- C: Marcellus -->
+  <div class="card" data-choice="c" onclick="selectCard(this)">
+    <div class="card-preview">
+      <div class="eyebrow">Авторская флористика</div>
+      <div class="title-c">Создаём<br>любовь<br><em>через цветы</em></div>
+      <div class="subtitle-text">Авторские букеты, сезонные композиции и доставка цветов для важных моментов.</div>
+      <div class="mini-btn">Перейти в каталог</div>
+    </div>
+    <div class="card-meta">
+      <div class="card-label">Вариант C</div>
+      <div class="card-name">Marcellus Regular</div>
+      <div class="card-desc">Антикварный, флористический. Уникальный характер, без курсива. Камерный и тёплый.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="select-bar">
+  <span id="select-hint">Кликните вариант или скажите в терминале</span>
+  <span id="select-label" class="selected-label"></span>
+</div>
+
+<script>
+function selectCard(el) {
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const choice = el.dataset.choice.toUpperCase();
+  document.getElementById('select-hint').textContent = 'Выбрано:';
+  document.getElementById('select-label').textContent = 'Вариант ' + choice;
+  // log to events file via helper if available
+  if (typeof window.__selectChoice === 'function') window.__selectChoice(el.dataset.choice, el.querySelector('.card-name').textContent);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #0e0e0e; color: #f5f0ea; }
+
+  .question-header {
+    padding: 24px 32px 0;
+    text-align: center;
+  }
+  .question-header h2 { font-size: 1rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #a89a8a; margin-bottom: 6px; }
+  .question-header p { font-size: 0.8rem; color: #6b5f54; letter-spacing: 0.06em; }
+
+  .layouts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 24px 32px 32px;
+  }
+
+  .layout-card {
+    border: 1.5px solid #2a2420;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .layout-card:hover { border-color: #7a4a5a; transform: translateY(-2px); }
+  .layout-card.selected { border-color: #e9a8c7 !important; box-shadow: 0 0 0 1px #e9a8c7; }
+
+  .layout-preview {
+    height: 240px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Layout A — Fullscreen с блоком внизу (как референс 1) */
+  .preview-a {
+    background: #101915;
+  }
+  .prev-a-nav {
+    position: absolute; top: 0; left: 0; right: 0; height: 36px;
+    background: rgba(16,25,21,0.7);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 14px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .prev-a-nav .logo { font-size: 9px; font-weight: 600; letter-spacing: 0.18em; color: #f5f0ea; }
+  .prev-a-nav .nav-links { display: flex; gap: 10px; }
+  .prev-a-nav .nav-links span { font-size: 6px; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; text-transform: uppercase; }
+  .prev-a-nav .cta-btn { font-size: 6px; border: 1px solid #e9a8c7; color: #e9a8c7; padding: 3px 7px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .prev-a-img {
+    position: absolute; top: 0; left: 0; right: 0; height: 58%;
+    background: linear-gradient(180deg, #1a2e1f 0%, #0e1a12 100%);
+    overflow: hidden;
+  }
+  .prev-a-img::after {
+    content: '🌹';
+    position: absolute; right: 20px; top: 10px;
+    font-size: 60px; opacity: 0.7; transform: rotate(-15deg);
+  }
+  .prev-a-burgundy {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 47%;
+    background: #5a1f32;
+  }
+  .prev-a-text {
+    position: absolute; bottom: 60px; left: 14px;
+    z-index: 10;
+  }
+  .prev-a-text .h1 { font-family: Georgia, serif; font-size: 13px; font-weight: 400; line-height: 1.2; color: #f5f0ea; }
+  .prev-a-text .h1 em { color: #e9a8c7; font-style: normal; }
+  .prev-a-sub { position: absolute; bottom: 26px; left: 14px; z-index: 10; font-size: 5.5px; color: rgba(255,244,238,0.6); max-width: 120px; line-height: 1.5; }
+  .prev-a-btncta { position: absolute; bottom: 10px; left: 14px; z-index: 10; font-size: 5.5px; background: #e9a8c7; color: #321221; padding: 3px 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .prev-a-photos {
+    position: absolute; bottom: 8px; right: 8px; display: flex; gap: 5px; z-index: 10;
+  }
+  .prev-a-photo1 { width: 46px; height: 36px; border-radius: 3px; background: #2a3f2e; overflow: hidden; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+  .prev-a-photo2 { width: 36px; height: 36px; border-radius: 3px; background: #1f2e25; overflow: hidden; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+
+  /* Layout B — Split half/half */
+  .preview-b {
+    background: #101915;
+    display: flex;
+  }
+  .prev-b-left {
+    width: 52%; padding: 12px; display: flex; flex-direction: column; justify-content: flex-end;
+    background: #101915;
+  }
+  .prev-b-right {
+    width: 48%;
+    background: linear-gradient(180deg, #1a2e1f 0%, #142419 100%);
+    position: relative; overflow: hidden;
+  }
+  .prev-b-right::after { content: '🌸'; font-size: 70px; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); opacity: 0.8; }
+  .prev-b-logo { font-size: 8px; font-weight: 600; letter-spacing: 0.15em; color: #f5f0ea; margin-bottom: auto; margin-top: 0; }
+  .prev-b-tag { font-size: 5px; color: rgba(255,244,238,0.4); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
+  .prev-b-title { font-family: Georgia, serif; font-size: 12px; color: #f5f0ea; line-height: 1.15; margin-bottom: 8px; }
+  .prev-b-title em { color: #f4b3d2; font-style: normal; }
+  .prev-b-sub { font-size: 5px; color: rgba(255,244,238,0.5); line-height: 1.5; margin-bottom: 10px; max-width: 100px; }
+  .prev-b-btn { font-size: 5.5px; background: #f4b3d2; color: #321221; padding: 3px 9px; letter-spacing: 0.08em; text-transform: uppercase; display: inline-block; }
+  .prev-b-nav {
+    position: absolute; top: 0; left: 0; right: 0; height: 28px;
+    display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 0 10px;
+  }
+  .prev-b-nav span { font-size: 5px; color: rgba(255,244,238,0.5); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* Layout C — Fullscreen immersive */
+  .preview-c {
+    background: linear-gradient(180deg, #0e1a12 0%, #1a0e14 100%);
+    position: relative; overflow: hidden;
+  }
+  .prev-c-flower-bg { position: absolute; inset: 0; font-size: 120px; display: flex; align-items: center; justify-content: center; opacity: 0.25; }
+  .prev-c-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(16,25,21,0.3) 0%, rgba(90,31,50,0.6) 60%, rgba(90,31,50,0.9) 100%); }
+  .prev-c-nav {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 10; height: 32px;
+    display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+  }
+  .prev-c-logo { font-size: 8px; font-weight: 600; letter-spacing: 0.2em; color: #f5f0ea; }
+  .prev-c-nav-links { display: flex; gap: 8px; }
+  .prev-c-nav-links span { font-size: 5.5px; color: rgba(255,255,255,0.55); letter-spacing: 0.1em; text-transform: uppercase; }
+  .prev-c-content { position: absolute; bottom: 24px; left: 12px; right: 12px; z-index: 10; }
+  .prev-c-eyebrow { font-size: 5px; color: rgba(255,244,238,0.45); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 6px; }
+  .prev-c-title { font-family: Georgia, serif; font-size: 15px; color: #f5f0ea; line-height: 1.1; margin-bottom: 6px; }
+  .prev-c-title em { color: #f4b3d2; font-style: italic; }
+  .prev-c-sub { font-size: 5px; color: rgba(255,244,238,0.55); line-height: 1.5; margin-bottom: 10px; }
+  .prev-c-btns { display: flex; gap: 6px; }
+  .prev-c-btn1 { font-size: 5.5px; background: #f4b3d2; color: #321221; padding: 4px 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .prev-c-btn2 { font-size: 5.5px; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); padding: 4px 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .layout-meta {
+    padding: 12px 14px;
+    background: #141210;
+    border-top: 1px solid #2a2420;
+  }
+  .layout-letter { font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #7a6a5a; margin-bottom: 3px; }
+  .layout-name { font-size: 11px; font-weight: 500; color: #c4b4a4; margin-bottom: 3px; }
+  .layout-desc { font-size: 10px; color: #6b5f54; line-height: 1.4; }
+</style>
+
+<div class="question-header">
+  <h2>Hero-композиция</h2>
+  <p>Выберите базовую структуру главного экрана FLOVERS</p>
+</div>
+
+<div class="layouts">
+
+  <!-- A: Референс 1 — dark hero + burgundy block + side photos -->
+  <div class="layout-card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="layout-preview preview-a">
+      <div class="prev-a-nav">
+        <span class="logo">FLOVERS</span>
+        <div class="nav-links">
+          <span>О нас</span><span>Каталог</span><span>Доставка</span>
+        </div>
+        <span class="cta-btn">Заказать</span>
+      </div>
+      <div class="prev-a-img"></div>
+      <div class="prev-a-burgundy"></div>
+      <div class="prev-a-text">
+        <div class="h1">Создаём<br><em>любовь</em><br>через цветы</div>
+      </div>
+      <div class="prev-a-sub">Авторские букеты, сезонные<br>композиции и доставка цветов</div>
+      <div class="prev-a-btncta">Перейти в каталог</div>
+      <div class="prev-a-photos">
+        <div class="prev-a-photo1">🌺</div>
+        <div class="prev-a-photo2">💐</div>
+      </div>
+    </div>
+    <div class="layout-meta">
+      <div class="layout-letter">Вариант A</div>
+      <div class="layout-name">Тёмный + бордо</div>
+      <div class="layout-desc">Точно по Референсу 1. Dark green hero, бордово-розовый нижний блок, декоративные фото сбоку. Самый editorial.</div>
+    </div>
+  </div>
+
+  <!-- B: Split layout — text left, fullscreen photo right -->
+  <div class="layout-card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="layout-preview preview-b">
+      <div class="prev-b-nav">
+        <span>О нас</span><span>Каталог</span><span>Доставка</span>
+      </div>
+      <div class="prev-b-left">
+        <div class="prev-b-logo">FLOVERS</div>
+        <div class="prev-b-tag">Авторская флористика</div>
+        <div class="prev-b-title">Создаём <em>любовь</em><br>через цветы</div>
+        <div class="prev-b-sub">Авторские букеты и доставка для важных моментов.</div>
+        <div class="prev-b-btn">Перейти в каталог</div>
+      </div>
+      <div class="prev-b-right"></div>
+    </div>
+    <div class="layout-meta">
+      <div class="layout-letter">Вариант B</div>
+      <div class="layout-name">Split 50/50</div>
+      <div class="layout-desc">Текст слева на тёмном фоне, большая фотография справа. Чище, современнее. Хорошо работает на desktop.</div>
+    </div>
+  </div>
+
+  <!-- C: Fullscreen immersive overlay -->
+  <div class="layout-card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="layout-preview preview-c">
+      <div class="prev-c-flower-bg">🌹</div>
+      <div class="prev-c-overlay"></div>
+      <div class="prev-c-nav">
+        <span class="prev-c-logo">FLOVERS</span>
+        <div class="prev-c-nav-links">
+          <span>О нас</span><span>Каталог</span><span>Доставка</span>
+        </div>
+      </div>
+      <div class="prev-c-content">
+        <div class="prev-c-eyebrow">Авторская флористика · Москва</div>
+        <div class="prev-c-title">Создаём<br><em>любовь</em><br>через цветы</div>
+        <div class="prev-c-sub">Авторские букеты и сезонные композиции для важных моментов.</div>
+        <div class="prev-c-btns">
+          <div class="prev-c-btn1">Перейти в каталог</div>
+          <div class="prev-c-btn2">Собрать букет</div>
+        </div>
+      </div>
+    </div>
+    <div class="layout-meta">
+      <div class="layout-letter">Вариант C</div>
+      <div class="layout-name">Fullscreen immersive</div>
+      <div class="layout-desc">Fullscreen фото с тёмным overlay, текст поверх. Самый кинематографичный, но требует идеального hero-фото.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleSelect(el) {
+  document.querySelectorAll('.layout-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+</script>

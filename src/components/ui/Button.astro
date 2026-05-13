@@ -1,0 +1,70 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'accent' | 'ghost' | 'submit';
+  size?: 'sm' | 'md' | 'lg';
+  fullWidth?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+  target?: string;
+  rel?: string;
+  id?: string;
+  class?: string;
+  'aria-label'?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  fullWidth = false,
+  type = 'button',
+  disabled = false,
+  target,
+  rel: relProp,
+  id,
+  class: className = '',
+  'aria-label': ariaLabel,
+  ...rest
+} = Astro.props;
+
+const rel = target === '_blank'
+  ? (relProp ?? 'noreferrer noopener')
+  : relProp;
+
+const classes = [
+  'btn',
+  `btn-${variant}`,
+  `btn-${size}`,
+  fullWidth ? 'btn-full' : '',
+  className,
+].filter(Boolean).join(' ');
+---
+
+{href ? (
+  <a
+    href={disabled ? undefined : href}
+    class={classes}
+    id={id}
+    target={target}
+    rel={rel}
+    aria-label={ariaLabel}
+    aria-disabled={disabled ? 'true' : undefined}
+    tabindex={disabled ? -1 : undefined}
+    {...rest}
+  >
+    <slot />
+  </a>
+) : (
+  <button
+    type={type}
+    class={classes}
+    id={id}
+    disabled={disabled}
+    aria-label={ariaLabel}
+    {...rest}
+  >
+    <slot />
+  </button>
+)}

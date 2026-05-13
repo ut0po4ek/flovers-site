@@ -1,0 +1,81 @@
+---
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  type?: 'text' | 'email';
+  placeholder?: string;
+  autocomplete?: string;
+  required?: boolean;
+  error?: string;
+}
+
+const {
+  id,
+  name,
+  label,
+  type = 'text',
+  placeholder = '',
+  autocomplete,
+  required = false,
+  error,
+} = Astro.props;
+---
+
+<div class="form-field">
+  <label for={id} class="field-label">
+    {label}{required && <span aria-hidden="true"> *</span>}
+  </label>
+  <input
+    id={id}
+    name={name}
+    type={type}
+    autocomplete={autocomplete}
+    required={required}
+    placeholder={placeholder}
+    aria-describedby={error ? `${id}-error` : undefined}
+    class="form-control"
+  />
+  {error && <p id={`${id}-error`} class="field-error hidden">{error}</p>}
+</div>
+
+<style>
+  .field-label {
+    display: block;
+    margin-bottom: 0.55rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+
+  .form-control {
+    width: 100%;
+    min-height: 3.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--color-surface) 62%, transparent);
+    color: var(--color-fg);
+    padding: 0.9rem 1rem;
+    font: inherit;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    transition: border-color 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+  }
+
+  .form-control::placeholder { color: var(--color-fg-subtle); }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 4px rgba(233, 168, 199, 0.18);
+    background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+  }
+
+  .field-error {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: #ef4444;
+  }
+</style>

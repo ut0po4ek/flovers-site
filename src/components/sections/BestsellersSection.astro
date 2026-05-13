@@ -14,13 +14,13 @@ const bestsellers = getBestsellers().slice(0, 3);
         <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
         <h2
           class="mt-6"
-          style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1;"
+          style="font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1;"
           data-reveal="up" data-reveal-delay="200"
         >
           Бестселлеры
         </h2>
       </div>
-      <div data-reveal="up" data-reveal-delay="300">
+      <div class="bestsellers-catalog-link" data-reveal="up" data-reveal-delay="300">
         <Button href="/catalog" variant="secondary" size="sm">
           Смотреть каталог
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -40,6 +40,12 @@ const bestsellers = getBestsellers().slice(0, 3);
 </section>
 
 <style>
+  .bestsellers-catalog-link {
+    margin: -0.25rem;
+    padding: 0.25rem;
+    overflow: visible;
+  }
+
   .bestsellers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
   @media (max-width: 767px) { .bestsellers-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; } }
   @media (max-width: 480px) { .bestsellers-grid { grid-template-columns: 1fr; } }

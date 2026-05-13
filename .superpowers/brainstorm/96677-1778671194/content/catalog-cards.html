@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Карточки каталога FLOVERS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1910; color: #fff4ee; font-family: 'Inter', sans-serif; }
+
+  .page-header {
+    padding: 24px 28px 8px;
+    text-align: center;
+  }
+  .page-header h2 {
+    font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: #a89080; margin-bottom: 4px;
+  }
+  .page-header p { font-size: 0.72rem; color: #5a4a40; letter-spacing: 0.04em; }
+
+  .sections { padding: 16px 24px 40px; display: flex; flex-direction: column; gap: 32px; }
+
+  .section-label {
+    font-size: 0.6rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #7a6050; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: #1e2e22; }
+
+  /* ── Grid previews ── */
+  .grid-preview { display: grid; gap: 12px; }
+  .grid-2col { grid-template-columns: 1fr 1fr; }
+  .grid-3col { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4col { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  /* ── Style A: Tall portrait card with price overlay ── */
+  .card-a {
+    border-radius: 8px; overflow: hidden; cursor: pointer;
+    border: 1.5px solid #1e2e22; transition: border-color 0.2s, transform 0.18s;
+    background: #111c16;
+  }
+  .card-a:hover { border-color: #7a4a5a; transform: translateY(-3px); }
+  .card-a.selected { border-color: #f4b3d2 !important; box-shadow: 0 0 0 1px #f4b3d2; }
+  .card-a-img {
+    aspect-ratio: 3/4;
+    background: linear-gradient(160deg, #1a3020 0%, #2a1a22 100%);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+  }
+  .card-a-img .badge {
+    position: absolute; top: 10px; left: 10px;
+    background: #f4b3d2; color: #321221;
+    font-size: 0.45rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 7px;
+  }
+  .card-a-img .hover-overlay {
+    position: absolute; inset: 0;
+    background: rgba(90,31,50,0.5);
+    opacity: 0; transition: opacity 0.25s;
+    display: flex; align-items: flex-end; padding: 12px;
+  }
+  .card-a:hover .hover-overlay { opacity: 1; }
+  .card-a-body { padding: 10px 12px 12px; }
+  .card-a-cat { font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,244,238,0.4); margin-bottom: 4px; }
+  .card-a-title { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 300; color: #fff4ee; margin-bottom: 4px; line-height: 1.2; }
+  .card-a-price { font-size: 0.62rem; font-weight: 500; color: #f4b3d2; letter-spacing: 0.06em; }
+
+  /* ── Style B: Square card with info below ── */
+  .card-b {
+    border-radius: 6px; overflow: hidden; cursor: pointer;
+    border: 1.5px solid #1e2e22; transition: border-color 0.2s, transform 0.18s;
+    background: #111c16;
+  }
+  .card-b:hover { border-color: #7a4a5a; transform: translateY(-3px); }
+  .card-b.selected { border-color: #f4b3d2 !important; box-shadow: 0 0 0 1px #f4b3d2; }
+  .card-b-img {
+    aspect-ratio: 1/1;
+    background: linear-gradient(135deg, #1a3020 0%, #2a1a22 100%);
+    display: flex; align-items: center; justify-content: center; font-size: 2.8rem;
+    position: relative; overflow: hidden;
+  }
+  .card-b-img .price-chip {
+    position: absolute; bottom: 8px; right: 8px;
+    background: rgba(16,25,21,0.85);
+    color: #f4b3d2; font-size: 0.55rem; font-weight: 500;
+    padding: 3px 8px; border-radius: 2px;
+  }
+  .card-b-body { padding: 8px 10px 10px; display: flex; align-items: center; justify-content: space-between; }
+  .card-b-info {}
+  .card-b-title { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; font-weight: 300; color: #fff4ee; line-height: 1.2; }
+  .card-b-cat { font-size: 0.5rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,244,238,0.35); margin-top: 2px; }
+  .card-b-arrow { width: 22px; height: 22px; border: 1px solid rgba(244,179,210,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .card-b-arrow svg { width: 10px; height: 10px; color: #f4b3d2; }
+
+  /* ── Style C: Horizontal card ── */
+  .card-c {
+    border-radius: 8px; overflow: hidden; cursor: pointer;
+    border: 1.5px solid #1e2e22; transition: border-color 0.2s, transform 0.18s;
+    background: #111c16;
+    display: flex;
+  }
+  .card-c:hover { border-color: #7a4a5a; }
+  .card-c.selected { border-color: #f4b3d2 !important; box-shadow: 0 0 0 1px #f4b3d2; }
+  .card-c-img {
+    width: 38%; flex-shrink: 0;
+    background: linear-gradient(160deg, #1a3020 0%, #2a1a22 100%);
+    display: flex; align-items: center; justify-content: center; font-size: 2.5rem;
+    min-height: 90px;
+  }
+  .card-c-body { padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
+  .card-c-cat { font-size: 0.48rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,244,238,0.35); }
+  .card-c-title { font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; font-weight: 300; color: #fff4ee; line-height: 1.2; }
+  .card-c-desc { font-size: 0.52rem; color: rgba(255,244,238,0.45); line-height: 1.4; }
+  .card-c-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
+  .card-c-price { font-size: 0.6rem; font-weight: 500; color: #f4b3d2; }
+  .card-c-link { font-size: 0.5rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,244,238,0.4); border-bottom: 1px solid rgba(244,179,210,0.3); padding-bottom: 1px; }
+
+  /* ── Selector row ── */
+  .selector-row {
+    display: flex; gap: 10px; margin-bottom: 6px; flex-wrap: wrap;
+  }
+  .selector-btn {
+    font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 5px 12px; border: 1.5px solid #1e2e22; color: rgba(255,244,238,0.5);
+    background: transparent; cursor: pointer; transition: border-color 0.15s, color 0.15s;
+    border-radius: 2px;
+  }
+  .selector-btn.active, .selector-btn:hover { border-color: #f4b3d2; color: #f4b3d2; }
+
+  /* ── Section wrapper as selectable option ── */
+  .option-section {
+    padding: 16px; border: 1.5px solid #1a2820; border-radius: 10px;
+    cursor: pointer; transition: border-color 0.2s;
+  }
+  .option-section:hover { border-color: #4a3040; }
+  .option-section.selected { border-color: #f4b3d2 !important; box-shadow: 0 0 0 1px #f4b3d2; }
+
+  .option-tag {
+    font-size: 0.58rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #7a6050; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .option-tag .rec { background: #f4b3d2; color: #321221; padding: 1px 6px; font-size: 0.5rem; letter-spacing: 0.08em; }
+
+  .bottom-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(13,25,16,0.95); border-top: 1px solid #1a2820;
+    padding: 10px 24px; display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.68rem; color: #5a4a40;
+    backdrop-filter: blur(8px);
+    z-index: 100;
+  }
+  .bottom-bar .selected-text { color: #f4b3d2; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h2>Карточки каталога</h2>
+  <p>Выберите стиль отображения букетов</p>
+</div>
+
+<div class="sections">
+
+  <!-- Option A: Portrait tall cards -->
+  <div class="option-section" data-choice="a" onclick="selectOption(this)">
+    <div class="option-tag">Вариант A — Портретные карточки <span class="rec">Рекомендуется</span></div>
+    <div class="selector-row">
+      <button class="selector-btn active">Все</button>
+      <button class="selector-btn">Розы</button>
+      <button class="selector-btn">Пионы</button>
+      <button class="selector-btn">Сезонные</button>
+    </div>
+    <div class="grid-preview grid-3col">
+      <div class="card-a">
+        <div class="card-a-img">🌹<div class="badge">Хит</div><div class="hover-overlay"><span style="font-size:0.5rem;color:#fff;letter-spacing:0.1em;text-transform:uppercase">Подробнее →</span></div></div>
+        <div class="card-a-body">
+          <div class="card-a-cat">Розы</div>
+          <div class="card-a-title">Dolce Rose</div>
+          <div class="card-a-price">4 900 ₽</div>
+        </div>
+      </div>
+      <div class="card-a">
+        <div class="card-a-img">🌸</div>
+        <div class="card-a-body">
+          <div class="card-a-cat">Пионы</div>
+          <div class="card-a-title">Velvet Peony</div>
+          <div class="card-a-price">6 200 ₽</div>
+        </div>
+      </div>
+      <div class="card-a">
+        <div class="card-a-img">💐</div>
+        <div class="card-a-body">
+          <div class="card-a-cat">Сезонные</div>
+          <div class="card-a-title">Wild Romance</div>
+          <div class="card-a-price">5 500 ₽</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:0.62rem;color:#5a4a40;margin-top:10px;padding-top:8px;border-top:1px solid #1a2820;">
+      Tall portrait-формат. Фото занимает ~70% карточки. Hover раскрывает CTA. Лучше всего передаёт красоту букетов.
+    </div>
+  </div>
+
+  <!-- Option B: Square cards with price chip -->
+  <div class="option-section" data-choice="b" onclick="selectOption(this)">
+    <div class="option-tag">Вариант B — Квадратные карточки</div>
+    <div class="grid-preview grid-4col">
+      <div class="card-b">
+        <div class="card-b-img">🌹<div class="price-chip">4 900 ₽</div></div>
+        <div class="card-b-body">
+          <div class="card-b-info">
+            <div class="card-b-title">Dolce Rose</div>
+            <div class="card-b-cat">Розы</div>
+          </div>
+          <div class="card-b-arrow"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="1" y1="5" x2="9" y2="5"/><polyline points="6,2 9,5 6,8"/></svg></div>
+        </div>
+      </div>
+      <div class="card-b">
+        <div class="card-b-img">🌸<div class="price-chip">6 200 ₽</div></div>
+        <div class="card-b-body">
+          <div class="card-b-info">
+            <div class="card-b-title">Velvet Peony</div>
+            <div class="card-b-cat">Пионы</div>
+          </div>
+          <div class="card-b-arrow"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="1" y1="5" x2="9" y2="5"/><polyline points="6,2 9,5 6,8"/></svg></div>
+        </div>
+      </div>
+      <div class="card-b">
+        <div class="card-b-img">💐<div class="price-chip">5 500 ₽</div></div>
+        <div class="card-b-body">
+          <div class="card-b-info">
+            <div class="card-b-title">Wild Romance</div>
+            <div class="card-b-cat">Сезонные</div>
+          </div>
+          <div class="card-b-arrow"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="1" y1="5" x2="9" y2="5"/><polyline points="6,2 9,5 6,8"/></svg></div>
+        </div>
+      </div>
+      <div class="card-b">
+        <div class="card-b-img">🌷<div class="price-chip">3 800 ₽</div></div>
+        <div class="card-b-body">
+          <div class="card-b-info">
+            <div class="card-b-title">Morning Blush</div>
+            <div class="card-b-cat">Монобукеты</div>
+          </div>
+          <div class="card-b-arrow"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="1" y1="5" x2="9" y2="5"/><polyline points="6,2 9,5 6,8"/></svg></div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:0.62rem;color:#5a4a40;margin-top:10px;padding-top:8px;border-top:1px solid #1a2820;">
+      Компактнее, больше букетов видно сразу. Цена в чипе поверх фото. Хорошо для плотного каталога.
+    </div>
+  </div>
+
+  <!-- Option C: Masonry/mixed sizes -->
+  <div class="option-section" data-choice="c" onclick="selectOption(this)">
+    <div class="option-tag">Вариант C — Смешанная сетка (масонри)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto;gap:10px;">
+      <div class="card-a" style="grid-row: span 2;">
+        <div class="card-a-img" style="aspect-ratio:2/3;font-size:4rem;">🌹<div class="badge">Хит</div></div>
+        <div class="card-a-body">
+          <div class="card-a-cat">Розы</div>
+          <div class="card-a-title">Dolce Rose</div>
+          <div class="card-a-price">4 900 ₽</div>
+        </div>
+      </div>
+      <div class="card-a">
+        <div class="card-a-img" style="aspect-ratio:4/3;font-size:2.2rem;">🌸</div>
+        <div class="card-a-body">
+          <div class="card-a-cat">Пионы</div>
+          <div class="card-a-title">Velvet Peony</div>
+          <div class="card-a-price">6 200 ₽</div>
+        </div>
+      </div>
+      <div class="card-a">
+        <div class="card-a-img" style="aspect-ratio:4/3;font-size:2.2rem;">🌷</div>
+        <div class="card-a-body">
+          <div class="card-a-cat">Монобукеты</div>
+          <div class="card-a-title">Morning Blush</div>
+          <div class="card-a-price">3 800 ₽</div>
+        </div>
+      </div>
+      <div class="card-a">
+        <div class="card-a-img" style="aspect-ratio:4/3;font-size:2.2rem;">💐</div>
+        <div class="card-a-body">
+          <div class="card-a-cat">Сезонные</div>
+          <div class="card-a-title">Wild Romance</div>
+          <div class="card-a-price">5 500 ₽</div>
+        </div>
+      </div>
+      <div class="card-a">
+        <div class="card-a-img" style="aspect-ratio:4/3;font-size:2.2rem;">🌺</div>
+        <div class="card-a-body">
+          <div class="card-a-cat">Подарочные</div>
+          <div class="card-a-title">Felicia</div>
+          <div class="card-a-price">7 200 ₽</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:0.62rem;color:#5a4a40;margin-top:10px;padding-top:8px;border-top:1px solid #1a2820;">
+      Editorial масонри с разными размерами. Хит-букет выделен крупно. Красиво, но сложнее в mobile-адаптации.
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-bar">
+  <span id="hint">Кликните вариант — он выделится розовой рамкой</span>
+  <span id="selected-text" class="selected-text"></span>
+</div>
+
+<script>
+function selectOption(el) {
+  document.querySelectorAll('.option-section').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  const map = { a: 'A — Портретные', b: 'B — Квадратные', c: 'C — Масонри' };
+  document.getElementById('hint').textContent = 'Выбрано:';
+  document.getElementById('selected-text').textContent = map[el.dataset.choice];
+}
+</script>
+</body>
+</html>

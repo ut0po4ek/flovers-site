@@ -30,17 +30,19 @@ const related = getRelatedBouquets(slug, 3);
   <main class="pt-20">
     <section class="section-padding bg-[var(--color-bg)]">
       <div class="container-site">
-        <Breadcrumbs
-          crumbs={[
-            { label: 'Главная', href: '/' },
-            { label: 'Каталог', href: '/catalog' },
-            { label: bouquet.title },
-          ]}
-        />
+        <div data-reveal="up" data-reveal-delay="80">
+          <Breadcrumbs
+            crumbs={[
+              { label: 'Главная', href: '/' },
+              { label: 'Каталог', href: '/catalog' },
+              { label: bouquet.title },
+            ]}
+          />
+        </div>
 
         <div class="product-grid mt-8">
           <div class="product-photo-col">
-            <div class="product-photo-wrap">
+            <div class="product-photo-wrap" data-reveal="scale" data-reveal-delay="120">
               <img
                 src={bouquet.image}
                 alt={bouquet.shortDescription}
@@ -56,25 +58,28 @@ const related = getRelatedBouquets(slug, 3);
 
           <div class="product-info-col">
             <div class="product-info-panel">
-              <p class="label-tag text-[var(--color-fg-subtle)] mb-3">{bouquet.categoryLabel}</p>
+              <p class="label-tag text-[var(--color-fg-subtle)] mb-3" data-reveal="up" data-reveal-delay="160">{bouquet.categoryLabel}</p>
               <h1
-                style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1; margin: 0 0 0.5rem;"
+                style="font-family: var(--font-display); font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1; margin: 0 0 0.5rem;"
+                data-reveal="up" data-reveal-delay="220"
               >
                 {bouquet.title}
               </h1>
-              <p class="product-price">{bouquet.price}</p>
-              <p class="text-[var(--color-fg-muted)] text-sm leading-relaxed mt-4 mb-6">{bouquet.description}</p>
+              <p class="product-price" data-reveal="up" data-reveal-delay="280">{bouquet.price}</p>
+              <p class="text-[var(--color-fg-muted)] text-sm leading-relaxed mt-4 mb-6" data-reveal="up" data-reveal-delay="340">{bouquet.description}</p>
 
-              <Button href="/#contacts" variant="primary" size="lg" fullWidth={true} class="mb-6">
-                Заказать букет
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <line x1="0" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/>
-                </svg>
-              </Button>
+              <div data-reveal="up" data-reveal-delay="400">
+                <Button href="/#contacts" variant="primary" size="lg" fullWidth={true} class="mb-6">
+                  Заказать букет
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <line x1="0" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/>
+                  </svg>
+                </Button>
+              </div>
 
-              <hr class="border-[var(--color-border)] mb-6" />
+              <hr class="border-[var(--color-border)] mb-6" data-reveal="clip" data-reveal-delay="440" />
 
-              <div class="mb-6">
+              <div class="mb-6" data-reveal="up" data-reveal-delay="460">
                 <p class="label-tag text-[var(--color-fg-subtle)] mb-3">Состав</p>
                 <ul class="composition-tags">
                   {bouquet.composition.map(item => (
@@ -83,7 +88,7 @@ const related = getRelatedBouquets(slug, 3);
                 </ul>
               </div>
 
-              <dl class="details-table">
+              <dl class="details-table" data-reveal="up" data-reveal-delay="520">
                 <div class="detail-row">
                   <dt class="label-tag text-[var(--color-fg-subtle)]">Размер</dt>
                   <dd class="text-sm text-[var(--color-fg-muted)]">{bouquet.size}</dd>
@@ -101,18 +106,18 @@ const related = getRelatedBouquets(slug, 3);
 
     <section class="section-padding section-adaptive">
       <div class="container-site max-w-3xl">
-        <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">Уход</span>
-        <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+        <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="up" data-reveal-delay="80">Уход</span>
+        <div class="divider my-4" data-reveal="clip" data-reveal-delay="140"></div>
         <h2
           class="mt-6 mb-8"
-          style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1;"
-          data-reveal="up" data-reveal-delay="200"
+          style="font-family: var(--font-display); font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1;"
+          data-reveal="up" data-reveal-delay="180"
         >
           Как ухаживать за букетом
         </h2>
         <ul class="care-list">
           {bouquet.care.map((tip, i) => (
-            <li class="care-item" data-reveal="up" data-reveal-delay={String(100 + i * 80)}>
+            <li class="care-item" data-reveal="up" data-reveal-delay={String(220 + i * 80)}>
               <span class="care-dot" aria-hidden="true"></span>
               <span class="text-sm text-[var(--color-fg-muted)] leading-relaxed">{tip}</span>
             </li>
@@ -124,13 +129,13 @@ const related = getRelatedBouquets(slug, 3);
     {bouquet.gallery.length > 1 && (
       <section class="section-padding bg-[var(--color-bg)]">
         <div class="container-site">
-          <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">Галерея</span>
-          <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+          <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="up" data-reveal-delay="80">Галерея</span>
+          <div class="divider my-4" data-reveal="clip" data-reveal-delay="140"></div>
           <div class="gallery-grid mt-8">
             {bouquet.gallery.map((src, i) => (
               <div
                 class={`gallery-item ${i === 0 ? 'gallery-item-wide' : ''}`}
-                data-reveal="up" data-reveal-delay={String(100 + i * 100)}
+                data-reveal="up" data-reveal-delay={String(180 + i * 90)}
               >
                 <img
                   src={src}
@@ -151,16 +156,16 @@ const related = getRelatedBouquets(slug, 3);
         <div class="container-site">
           <div class="flex items-end justify-between mb-12">
             <div>
-              <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">Похожие букеты</span>
-              <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+              <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="up" data-reveal-delay="80">Похожие букеты</span>
+              <div class="divider my-4" data-reveal="clip" data-reveal-delay="140"></div>
             </div>
-            <a href="/catalog" class="label-tag text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] transition-colors duration-200">
+            <a href="/catalog" class="label-tag text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] transition-colors duration-200" data-reveal="up" data-reveal-delay="180">
               Весь каталог →
             </a>
           </div>
           <div class="related-grid">
             {related.map((b, i) => (
-              <div data-reveal="up" data-reveal-delay={String(100 + i * 120)}>
+              <div data-reveal="up" data-reveal-delay={String(220 + i * 90)}>
                 <BouquetCard bouquet={b} />
               </div>
             ))}
@@ -173,15 +178,15 @@ const related = getRelatedBouquets(slug, 3);
       <div class="container-site max-w-xl mx-auto">
         <h2
           class="mb-5"
-          style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.2;"
-          data-reveal="up"
+          style="font-family: var(--font-display); font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.2;"
+          data-reveal="up" data-reveal-delay="80"
         >
           Хотите изменить оттенки или состав?
         </h2>
-        <p class="text-[var(--color-fg-muted)] text-sm leading-relaxed mb-8" data-reveal="up" data-reveal-delay="100">
+        <p class="text-[var(--color-fg-muted)] text-sm leading-relaxed mb-8" data-reveal="up" data-reveal-delay="160">
           Соберём индивидуально под ваш повод и бюджет.
         </p>
-        <div data-reveal="up" data-reveal-delay="200">
+        <div data-reveal="up" data-reveal-delay="240">
           <Button href="/#contacts" variant="primary" size="md">Оставить заявку</Button>
         </div>
       </div>
@@ -197,11 +202,14 @@ const related = getRelatedBouquets(slug, 3);
   .product-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
   .product-badge {
     position: absolute; top: 12px; left: 12px;
-    background-color: var(--color-accent); color: var(--btn-primary-bg, #261818);
-    font-size: 0.5625rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 8px;
+    background-color: var(--color-accent); color: #321221;
+    font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; padding: 6px 10px; line-height: 1;
+    border: 1px solid rgba(255, 244, 238, 0.28);
+    box-shadow: 0 10px 24px rgba(38, 18, 24, 0.14);
   }
+  :global([data-theme="dark"]) .product-badge { color: #321221; }
   .product-price { font-size: 1.25rem; font-weight: 500; color: var(--color-accent-dark); margin: 0; }
-  [data-theme="dark"] .product-price { color: var(--color-accent); }
+  :global([data-theme="dark"]) .product-price { color: var(--color-accent); }
 
   .composition-tags { display: flex; flex-wrap: wrap; gap: 0.375rem; list-style: none; padding: 0; margin: 0; }
   .composition-tag { font-size: 0.6875rem; border: 1px solid var(--color-border); color: var(--color-fg-muted); padding: 3px 10px; border-radius: 2px; line-height: 1.6; }
