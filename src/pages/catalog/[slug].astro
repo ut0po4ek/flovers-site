@@ -1,0 +1,237 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import Button from '../../components/ui/Button.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import BouquetCard from '../../components/ui/BouquetCard.astro';
+import { bouquets, getBouquetBySlug, getRelatedBouquets } from '../../data/bouquets';
+import { siteConfig } from '../../config/site';
+
+export function getStaticPaths() {
+  return bouquets.map(b => ({ params: { slug: b.slug } }));
+}
+
+const { slug } = Astro.params;
+const bouquet = getBouquetBySlug(slug);
+
+if (!bouquet) {
+  return Astro.redirect('/catalog');
+}
+
+const related = getRelatedBouquets(slug, 3);
+---
+
+<BaseLayout
+  title={`${bouquet.title} — ${siteConfig.name}`}
+  description={bouquet.shortDescription}
+>
+  <Header />
+  <main class="pt-20">
+    <section class="section-padding bg-[var(--color-bg)]">
+      <div class="container-site">
+        <Breadcrumbs
+          crumbs={[
+            { label: 'Главная', href: '/' },
+            { label: 'Каталог', href: '/catalog' },
+            { label: bouquet.title },
+          ]}
+        />
+
+        <div class="product-grid mt-8">
+          <div class="product-photo-col">
+            <div class="product-photo-wrap">
+              <img
+                src={bouquet.image}
+                alt={bouquet.shortDescription}
+                width="800" height="1067"
+                fetchpriority="high" loading="eager" decoding="sync"
+                class="product-photo"
+              />
+              {bouquet.badge && (
+                <span class="product-badge">{bouquet.badge}</span>
+              )}
+            </div>
+          </div>
+
+          <div class="product-info-col">
+            <div class="product-info-panel">
+              <p class="label-tag text-[var(--color-fg-subtle)] mb-3">{bouquet.categoryLabel}</p>
+              <h1
+                style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1; margin: 0 0 0.5rem;"
+              >
+                {bouquet.title}
+              </h1>
+              <p class="product-price">{bouquet.price}</p>
+              <p class="text-[var(--color-fg-muted)] text-sm leading-relaxed mt-4 mb-6">{bouquet.description}</p>
+
+              <Button href="/#contacts" variant="primary" size="lg" fullWidth={true} class="mb-6">
+                Заказать букет
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <line x1="0" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/>
+                </svg>
+              </Button>
+
+              <hr class="border-[var(--color-border)] mb-6" />
+
+              <div class="mb-6">
+                <p class="label-tag text-[var(--color-fg-subtle)] mb-3">Состав</p>
+                <ul class="composition-tags">
+                  {bouquet.composition.map(item => (
+                    <li class="composition-tag">{item}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <dl class="details-table">
+                <div class="detail-row">
+                  <dt class="label-tag text-[var(--color-fg-subtle)]">Размер</dt>
+                  <dd class="text-sm text-[var(--color-fg-muted)]">{bouquet.size}</dd>
+                </div>
+                <div class="detail-row">
+                  <dt class="label-tag text-[var(--color-fg-subtle)]">Доставка</dt>
+                  <dd class="text-sm text-[var(--color-fg-muted)]">{bouquet.delivery}</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-padding section-adaptive">
+      <div class="container-site max-w-3xl">
+        <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">Уход</span>
+        <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+        <h2
+          class="mt-6 mb-8"
+          style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1;"
+          data-reveal="up" data-reveal-delay="200"
+        >
+          Как ухаживать за букетом
+        </h2>
+        <ul class="care-list">
+          {bouquet.care.map((tip, i) => (
+            <li class="care-item" data-reveal="up" data-reveal-delay={String(100 + i * 80)}>
+              <span class="care-dot" aria-hidden="true"></span>
+              <span class="text-sm text-[var(--color-fg-muted)] leading-relaxed">{tip}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    {bouquet.gallery.length > 1 && (
+      <section class="section-padding bg-[var(--color-bg)]">
+        <div class="container-site">
+          <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">Галерея</span>
+          <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+          <div class="gallery-grid mt-8">
+            {bouquet.gallery.map((src, i) => (
+              <div
+                class={`gallery-item ${i === 0 ? 'gallery-item-wide' : ''}`}
+                data-reveal="up" data-reveal-delay={String(100 + i * 100)}
+              >
+                <img
+                  src={src}
+                  alt={`${bouquet.title} — фото ${i + 1}`}
+                  loading="lazy" decoding="async"
+                  width="800" height={i === 0 ? '533' : '800'}
+                  class="gallery-img"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {related.length > 0 && (
+      <section class="section-padding" style="background-color: var(--color-surface);">
+        <div class="container-site">
+          <div class="flex items-end justify-between mb-12">
+            <div>
+              <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">Похожие букеты</span>
+              <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+            </div>
+            <a href="/catalog" class="label-tag text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] transition-colors duration-200">
+              Весь каталог →
+            </a>
+          </div>
+          <div class="related-grid">
+            {related.map((b, i) => (
+              <div data-reveal="up" data-reveal-delay={String(100 + i * 120)}>
+                <BouquetCard bouquet={b} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <section class="section-padding section-adaptive text-center">
+      <div class="container-site max-w-xl mx-auto">
+        <h2
+          class="mb-5"
+          style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.2;"
+          data-reveal="up"
+        >
+          Хотите изменить оттенки или состав?
+        </h2>
+        <p class="text-[var(--color-fg-muted)] text-sm leading-relaxed mb-8" data-reveal="up" data-reveal-delay="100">
+          Соберём индивидуально под ваш повод и бюджет.
+        </p>
+        <div data-reveal="up" data-reveal-delay="200">
+          <Button href="/#contacts" variant="primary" size="md">Оставить заявку</Button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .product-grid { display: grid; grid-template-columns: 55% 1fr; gap: 4rem; align-items: start; }
+  .product-photo-col { position: sticky; top: 88px; }
+  .product-photo-wrap { position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 4 / 5; background-color: var(--color-surface); }
+  .product-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .product-badge {
+    position: absolute; top: 12px; left: 12px;
+    background-color: var(--color-accent); color: var(--btn-primary-bg, #261818);
+    font-size: 0.5625rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 8px;
+  }
+  .product-price { font-size: 1.25rem; font-weight: 500; color: var(--color-accent-dark); margin: 0; }
+  [data-theme="dark"] .product-price { color: var(--color-accent); }
+
+  .composition-tags { display: flex; flex-wrap: wrap; gap: 0.375rem; list-style: none; padding: 0; margin: 0; }
+  .composition-tag { font-size: 0.6875rem; border: 1px solid var(--color-border); color: var(--color-fg-muted); padding: 3px 10px; border-radius: 2px; line-height: 1.6; }
+
+  .details-table { display: flex; flex-direction: column; gap: 0.625rem; }
+  .detail-row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border); }
+  .detail-row:last-child { border-bottom: none; }
+
+  .care-list { display: flex; flex-direction: column; gap: 0.75rem; list-style: none; padding: 0; margin: 0; }
+  .care-item { display: flex; align-items: flex-start; gap: 0.75rem; }
+  .care-dot { width: 4px; height: 4px; border-radius: 50%; background-color: var(--color-accent); flex-shrink: 0; margin-top: 0.45rem; }
+
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+  .gallery-item { border-radius: 6px; overflow: hidden; aspect-ratio: 3 / 4; background-color: var(--color-surface); }
+  .gallery-item-wide { grid-column: span 2; aspect-ratio: 4 / 3; }
+  .gallery-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 600ms var(--ease-out); }
+  .gallery-item:hover .gallery-img { transform: scale(1.03); }
+
+  .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+
+  @media (max-width: 767px) {
+    .product-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .product-photo-col { position: static; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item-wide { grid-column: span 2; aspect-ratio: 4 / 3; }
+    .related-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .related-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .gallery-item-wide { grid-column: span 1; }
+  }
+</style>
