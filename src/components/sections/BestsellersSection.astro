@@ -1,0 +1,46 @@
+---
+import BouquetCard from '../ui/BouquetCard.astro';
+import Button from '../ui/Button.astro';
+import { getBestsellers } from '../../data/bouquets';
+
+const bestsellers = getBestsellers().slice(0, 3);
+---
+
+<section class="section-padding" style="background-color: var(--color-surface);">
+  <div class="container-site">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14 md:mb-16">
+      <div>
+        <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">Популярное</span>
+        <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+        <h2
+          class="mt-6"
+          style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1;"
+          data-reveal="up" data-reveal-delay="200"
+        >
+          Бестселлеры
+        </h2>
+      </div>
+      <div data-reveal="up" data-reveal-delay="300">
+        <Button href="/catalog" variant="secondary" size="sm">
+          Смотреть каталог
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <line x1="0" y1="6" x2="10" y2="6"/><polyline points="7,3 10,6 7,9"/>
+          </svg>
+        </Button>
+      </div>
+    </div>
+    <div class="bestsellers-grid">
+      {bestsellers.map((bouquet, i) => (
+        <div data-reveal="up" data-reveal-delay={String(100 + i * 120)}>
+          <BouquetCard bouquet={bouquet} />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .bestsellers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  @media (max-width: 767px) { .bestsellers-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; } }
+  @media (max-width: 480px) { .bestsellers-grid { grid-template-columns: 1fr; } }
+</style>

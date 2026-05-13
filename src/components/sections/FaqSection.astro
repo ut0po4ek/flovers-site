@@ -1,0 +1,60 @@
+---
+const faqs = [
+  { q: 'Как сделать заказ?', a: 'Выберите букет в каталоге и нажмите «Заказать букет», или заполните форму на странице контактов. Мы свяжемся с вами в течение 15 минут для подтверждения заказа.' },
+  { q: 'Можно ли изменить состав букета?', a: 'Да, любой букет можно адаптировать — заменить цветы, изменить оттенки или размер. Напишите пожелания в комментарии к заказу или свяжитесь с нами напрямую.' },
+  { q: 'Сколько стоит доставка?', a: 'Доставка по Москве в пределах МКАД — 350 ₽. За МКАД — от 500 ₽ в зависимости от расстояния. При заказе от 7 000 ₽ доставка бесплатна.' },
+  { q: 'Когда лучше оформить заказ?', a: 'Для срочной доставки принимаем заказы за 2–3 часа. Для особых дат (праздники, свадьбы) рекомендуем оформить заказ за 1–2 дня заранее.' },
+  { q: 'Можно ли приложить открытку?', a: 'Да, к любому букету можно добавить авторскую открытку с вашим текстом. Укажите текст в комментарии к заказу — оформим красиво.' },
+];
+---
+
+<section id="faq" class="section-padding bg-[var(--color-bg-warm)]">
+  <div class="container-site">
+    <div class="max-w-3xl mx-auto">
+      <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">Вопросы</span>
+      <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+      <h2
+        class="mt-6 mb-12"
+        style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1;"
+        data-reveal="up" data-reveal-delay="200"
+      >
+        Частые вопросы
+      </h2>
+      <div class="faq-list">
+        {faqs.map((faq, i) => (
+          <details class="faq-item" data-reveal="up" data-reveal-delay={String(100 + i * 80)}>
+            <summary class="faq-summary">
+              <span class="faq-question">{faq.q}</span>
+              <span class="faq-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <line x1="8" y1="2" x2="8" y2="14" class="faq-v"/>
+                  <line x1="2" y1="8" x2="14" y2="8"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="faq-body"><p class="faq-answer">{faq.a}</p></div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-list { border-top: 1px solid var(--color-border); }
+  .faq-item { border-bottom: 1px solid var(--color-border); }
+  .faq-summary {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: 1.25rem 0; cursor: pointer; list-style: none; user-select: none;
+  }
+  .faq-summary::-webkit-details-marker { display: none; }
+  .faq-summary::marker { display: none; }
+  .faq-summary:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 2px; }
+  .faq-question { font-size: 0.9375rem; font-weight: 400; color: var(--color-fg); line-height: 1.4; }
+  .faq-icon { flex-shrink: 0; color: var(--color-fg-subtle); transition: transform 300ms var(--ease-out), color 200ms ease; }
+  .faq-item[open] .faq-icon { transform: rotate(45deg); color: var(--color-accent); }
+  .faq-v { transition: opacity 200ms ease; }
+  .faq-item[open] .faq-v { opacity: 0; }
+  .faq-body { padding-bottom: 1.25rem; }
+  .faq-answer { font-size: 0.875rem; line-height: 1.7; color: var(--color-fg-muted); max-width: 56ch; margin: 0; }
+</style>

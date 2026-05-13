@@ -1,0 +1,36 @@
+---
+---
+
+<section id="about" class="section-padding bg-[var(--color-bg)]">
+  <div class="container-site">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+      <div>
+        <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">О нас</span>
+        <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+        <blockquote class="mt-8 mb-8" data-reveal="up" data-reveal-delay="200">
+          <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 300; font-style: italic; letter-spacing: -0.01em; line-height: 1.2; color: var(--color-fg);">
+            Каждый букет — это не просто цветы.<br />Это чувство, которое вы дарите.
+          </p>
+        </blockquote>
+        <p class="text-[var(--color-fg-muted)] leading-relaxed text-base max-w-md" data-reveal="up" data-reveal-delay="300">
+          Мы создаём авторские букеты с вниманием к каждой детали — от выбора цветка до упаковки. Работаем только с сезонными и свежими цветами.
+        </p>
+      </div>
+      <div class="flex flex-col gap-8" data-reveal="right" data-reveal-delay="200">
+        {[
+          { num: '01', title: 'Сезонные цветы', desc: 'Работаем только с тем, что цветёт сейчас — ярко, свежо и без химии.' },
+          { num: '02', title: 'Ручная сборка', desc: 'Каждый букет собирается флористом лично, под конкретный повод.' },
+          { num: '03', title: 'Бережная доставка', desc: 'Доставляем в специальной упаковке — цветы приедут такими, какими ушли.' },
+        ].map((item) => (
+          <div class="flex gap-6 pb-8 border-b border-[var(--color-border)] last:border-0 last:pb-0">
+            <span class="label-tag shrink-0 w-6 text-[var(--color-accent)]">{item.num}</span>
+            <div>
+              <h3 class="text-sm font-medium mb-2">{item.title}</h3>
+              <p class="text-[var(--color-fg-muted)] text-sm leading-relaxed">{item.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

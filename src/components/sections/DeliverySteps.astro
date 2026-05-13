@@ -1,0 +1,44 @@
+---
+const steps = [
+  { num: '01', title: 'Выберите букет', desc: 'Откройте каталог и найдите готовую композицию или используйте её как основу для индивидуального заказа.' },
+  { num: '02', title: 'Уточните детали', desc: 'Напишите нам в мессенджер или оставьте заявку — уточним размер, оттенки, упаковку и время доставки.' },
+  { num: '03', title: 'Флорист соберёт', desc: 'Мастер соберёт букет из свежих цветов специально для вас. Срок сборки — 1–2 часа.' },
+  { num: '04', title: 'Доставим вовремя', desc: 'Курьер доставит букет в бережной упаковке в удобное для вас время по всей Москве.' },
+];
+---
+
+<section id="delivery" class="section-padding bg-[var(--color-bg)]">
+  <div class="container-site">
+    <div class="max-w-2xl mb-14 md:mb-16">
+      <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">Как заказать</span>
+      <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+      <h2
+        class="mt-6"
+        style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.1;"
+        data-reveal="up" data-reveal-delay="200"
+      >
+        Четыре шага<br />до вашего букета
+      </h2>
+    </div>
+    <div class="steps-grid">
+      {steps.map((step, i) => (
+        <div class="step-item" data-reveal="up" data-reveal-delay={String(100 + i * 100)}>
+          <span class="label-tag text-[var(--color-accent)] block mb-4">{step.num}</span>
+          <h3 class="text-base font-medium mb-3 tracking-tight">{step.title}</h3>
+          <p class="text-[var(--color-fg-muted)] text-sm leading-relaxed">{step.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; position: relative; }
+  .steps-grid::before {
+    content: ''; position: absolute; top: 0.75rem; left: 2.5rem; right: 2.5rem;
+    height: 1px; background: var(--color-border); z-index: 0;
+  }
+  .step-item { position: relative; }
+  @media (max-width: 1023px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } .steps-grid::before { display: none; } }
+  @media (max-width: 480px) { .steps-grid { grid-template-columns: 1fr; } }
+</style>
