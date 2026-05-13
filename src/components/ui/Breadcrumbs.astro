@@ -1,0 +1,75 @@
+---
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  crumbs: Crumb[];
+}
+
+const { crumbs } = Astro.props;
+---
+
+<nav aria-label="Хлебные крошки" class="breadcrumbs">
+  <ol class="breadcrumbs-list">
+    {crumbs.map((crumb, i) => (
+      <li class="breadcrumbs-item">
+        {crumb.href && i < crumbs.length - 1 ? (
+          <a href={crumb.href} class="breadcrumbs-link">{crumb.label}</a>
+        ) : (
+          <span class="breadcrumbs-current" aria-current={i === crumbs.length - 1 ? 'page' : undefined}>
+            {crumb.label}
+          </span>
+        )}
+        {i < crumbs.length - 1 && (
+          <span class="breadcrumbs-sep" aria-hidden="true">·</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+
+  .breadcrumbs-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .breadcrumbs-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .breadcrumbs-link {
+    color: var(--color-fg-subtle);
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+
+  .breadcrumbs-link:hover {
+    color: var(--color-fg-muted);
+  }
+
+  .breadcrumbs-current {
+    color: var(--color-fg-muted);
+  }
+
+  .breadcrumbs-sep {
+    color: var(--color-fg-subtle);
+    margin: 0 4px;
+  }
+</style>
