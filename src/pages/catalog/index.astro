@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import BouquetCard from '../../components/ui/BouquetCard.astro';
+import Button from '../../components/ui/Button.astro';
+import { bouquets } from '../../data/bouquets';
+import { siteConfig } from '../../config/site';
+
+const filters = [
+  { label: 'Все',        value: 'all' },
+  { label: 'Розы',       value: 'roses' },
+  { label: 'Пионы',      value: 'peonies' },
+  { label: 'Сезонные',   value: 'seasonal' },
+  { label: 'Монобукеты', value: 'mono' },
+  { label: 'Подарочные', value: 'gift' },
+];
+---
+
+<BaseLayout
+  title={`Каталог букетов — ${siteConfig.name}`}
+  description="Авторские букеты, сезонные композиции и монобукеты. Выберите готовую композицию или закажите индивидуальный букет."
+>
+  <Header />
+  <main class="pt-20">
+    <section class="section-padding bg-[var(--color-bg)]">
+      <div class="container-site">
+        <span class="label-tag text-[var(--color-fg-subtle)]" data-reveal="left">Каталог</span>
+        <div class="divider my-4" data-reveal="clip" data-reveal-delay="150"></div>
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mt-6">
+          <h1
+            style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; letter-spacing: -0.02em; line-height: 1.05;"
+            data-reveal="up" data-reveal-delay="200"
+          >
+            Каталог букетов
+          </h1>
+          <p class="text-[var(--color-fg-muted)] text-sm max-w-xs leading-relaxed" data-reveal="up" data-reveal-delay="300">
+            Выберите готовую композицию или используйте её как основу для индивидуального заказа.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-padding" style="padding-top: 0; background-color: var(--color-bg);">
+      <div class="container-site">
+        <div class="catalog-filters" role="group" aria-label="Фильтр по категории">
+          {filters.map((f) => (
+            <button class={`filter-btn ${f.value === 'all' ? 'active' : ''}`} data-filter={f.value} type="button">
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        <div class="catalog-grid" id="catalog-grid">
+          {bouquets.map((bouquet, i) => (
+            <div
+              class="catalog-card-wrap"
+              data-category={bouquet.category}
+              data-reveal="up"
+              data-reveal-delay={String(Math.min(i * 60, 400))}
+            >
+              <BouquetCard bouquet={bouquet} />
+            </div>
+          ))}
+        </div>
+
+        <p id="no-results" class="hidden text-center text-[var(--color-fg-subtle)] text-sm py-16">
+          Нет букетов в этой категории
+        </p>
+      </div>
+    </section>
+
+    <section class="section-padding section-adaptive text-center">
+      <div class="container-site max-w-2xl mx-auto">
+        <h2
+          class="mb-5"
+          style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.75rem, 3.5vw, 2.75rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.15;"
+          data-reveal="up"
+        >
+          Не нашли подходящий букет?
+        </h2>
+        <p class="text-[var(--color-fg-muted)] text-base leading-relaxed mb-8" data-reveal="up" data-reveal-delay="100">
+          Соберём индивидуальную композицию под ваш повод, оттенки и бюджет.
+        </p>
+        <div data-reveal="up" data-reveal-delay="200">
+          <Button href="/#contacts" variant="primary" size="lg">
+            Оставить заявку
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <line x1="0" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/>
+            </svg>
+          </Button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .catalog-filters {
+    display: flex; gap: 0.5rem; flex-wrap: nowrap;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem; margin-bottom: 2.5rem;
+    scrollbar-width: none;
+  }
+  .catalog-filters::-webkit-scrollbar { display: none; }
+
+  .filter-btn {
+    flex-shrink: 0; font-size: 0.6875rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.5rem 1.125rem; border: 1px solid var(--color-border);
+    background: transparent; color: var(--color-fg-muted);
+    cursor: pointer; white-space: nowrap;
+    transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease;
+    border-radius: 2px;
+  }
+  .filter-btn:hover { border-color: var(--color-accent); color: var(--color-fg); }
+  .filter-btn.active {
+    border-color: var(--color-accent); background-color: var(--color-accent);
+    color: var(--btn-primary-bg, #261818);
+  }
+  [data-theme="dark"] .filter-btn.active { color: #321221; }
+
+  .catalog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  @media (max-width: 1023px) { .catalog-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .catalog-grid { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const cards = document.querySelectorAll<HTMLElement>('.catalog-card-wrap');
+  const noResults = document.getElementById('no-results');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cat = btn.dataset.filter ?? 'all';
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      let visibleCount = 0;
+      cards.forEach(card => {
+        const show = cat === 'all' || card.dataset.category === cat;
+        card.hidden = !show;
+        if (show) visibleCount++;
+      });
+      if (noResults) noResults.classList.toggle('hidden', visibleCount > 0);
+    });
+  });
+</script>
