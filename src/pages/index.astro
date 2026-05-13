@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import Hero from '../components/sections/Hero.astro';
+import MissionSection from '../components/sections/MissionSection.astro';
+import BestsellersSection from '../components/sections/BestsellersSection.astro';
+import DeliverySteps from '../components/sections/DeliverySteps.astro';
+import CustomBouquetCta from '../components/sections/CustomBouquetCta.astro';
+import FaqSection from '../components/sections/FaqSection.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+import { siteConfig } from '../config/site';
+---
+
+<BaseLayout
+  title={`${siteConfig.name} — ${siteConfig.description}`}
+  description={siteConfig.description}
+>
+  <Header />
+  <main>
+    <Hero />
+    <MissionSection />
+    <BestsellersSection />
+    <DeliverySteps />
+    <CustomBouquetCta />
+    <FaqSection />
+    <ContactSection />
+  </main>
+  <Footer />
+</BaseLayout>
