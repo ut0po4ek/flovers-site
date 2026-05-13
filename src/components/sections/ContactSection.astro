@@ -1,0 +1,248 @@
+---
+import Button from '../ui/Button.astro';
+import { siteConfig } from '../../config/site';
+---
+
+
+<section id="contacts" class="section-padding bg-[var(--color-bg)]">
+  <div class="container-site">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+      <!-- Left -->
+      <div>
+        <span class="label-tag reveal">Заказ</span>
+        <div class="divider my-4 reveal reveal-delay-1"></div>
+        <h2
+  class="mt-6 mb-6 reveal reveal-delay-2"
+  style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.75rem, 3.5vw, 3rem); font-weight: 300; letter-spacing: -0.01em; line-height: 1.15;"
+>
+  Расскажите,<br />для кого букет
+</h2>
+        <p class="text-[var(--color-fg-muted)] text-base leading-relaxed mb-10 reveal reveal-delay-3">
+          Мы подберём цветы, оттенки и упаковку под настроение, повод и бюджет.
+        </p>
+
+        <div class="flex flex-col gap-5 reveal reveal-delay-4">
+          <div class="flex items-start gap-4">
+            <span class="label-tag shrink-0 mt-0.5 text-[var(--color-accent)]">ТЕЛ</span>
+            <a href={`tel:${siteConfig.contacts.phone.replace(/[\s\-()]/g, '')}`} class="text-sm hover:text-[var(--color-accent)] transition-colors duration-200">
+              {siteConfig.contacts.phone}
+            </a>
+          </div>
+          <div class="flex items-start gap-4">
+            <span class="label-tag shrink-0 mt-0.5 text-[var(--color-accent)]">МАЙ</span>
+            <a href={`mailto:${siteConfig.contacts.email}`} class="text-sm hover:text-[var(--color-accent)] transition-colors duration-200">
+              {siteConfig.contacts.email}
+            </a>
+          </div>
+          <div class="flex items-start gap-4">
+            <span class="label-tag shrink-0 mt-0.5 text-[var(--color-accent)]">АДР</span>
+            <p class="text-sm text-[var(--color-fg-muted)]">{siteConfig.contacts.address}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="reveal reveal-delay-2">
+        <form
+          id="contact-form"
+          class="flex flex-col gap-5"
+          novalidate
+        >
+          <!-- Name -->
+          <div class="form-field">
+            <label for="field-name" class="label-tag block mb-2">Имя *</label>
+            <input
+              id="field-name"
+              name="name"
+              type="text"
+              autocomplete="name"
+              required
+              placeholder="Ваше имя"
+              class="w-full bg-transparent border border-[var(--color-border)] px-4 py-3.5 text-sm placeholder:text-[var(--color-fg-subtle)] focus:outline-none focus:border-[var(--color-fg)] transition-colors duration-200"
+            />
+            <p class="field-error hidden text-xs text-red-500 mt-1">Пожалуйста, укажите ваше имя</p>
+          </div>
+
+          <!-- Phone -->
+          <div class="form-field">
+            <label for="field-phone" class="label-tag block mb-2">Телефон *</label>
+            <input
+              id="field-phone"
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              required
+              placeholder="+7 (___) ___-__-__"
+              class="w-full bg-transparent border border-[var(--color-border)] px-4 py-3.5 text-sm placeholder:text-[var(--color-fg-subtle)] focus:outline-none focus:border-[var(--color-fg)] transition-colors duration-200"
+            />
+            <p class="field-error hidden text-xs text-red-500 mt-1">Пожалуйста, укажите ваш телефон</p>
+          </div>
+
+          <!-- Delivery date -->
+          <div class="form-field">
+            <label for="field-date" class="label-tag block mb-2">Дата доставки <span class="text-[var(--color-fg-subtle)]">(опционально)</span></label>
+            <input
+              id="field-date"
+              name="delivery_date"
+              type="date"
+              class="w-full bg-transparent border border-[var(--color-border)] px-4 py-3.5 text-sm focus:outline-none focus:border-[var(--color-fg)] transition-colors duration-200"
+            />
+          </div>
+
+          <!-- Project type -->
+          <div class="form-field">
+            <label for="field-type" class="label-tag block mb-2">Тип заказа *</label>
+            <div class="relative">
+              <select
+                id="field-type"
+                name="project_type"
+                required
+                class="w-full bg-[var(--color-bg)] border border-[var(--color-border)] px-4 py-3.5 text-sm appearance-none focus:outline-none focus:border-[var(--color-fg)] transition-colors duration-200 cursor-pointer"
+              >
+                <option value="" disabled selected>Выберите тип заказа</option>
+                <option value="ready">Готовый букет</option>
+                <option value="custom">Индивидуальный букет</option>
+                <option value="wedding">Свадебная флористика</option>
+                <option value="corporate">Корпоративный заказ</option>
+                <option value="other">Другое</option>
+              </select>
+              <svg class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--color-fg-muted)]" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <polyline points="2,4 6,8 10,4"/>
+              </svg>
+            </div>
+            <p class="field-error hidden text-xs text-red-500 mt-1">Пожалуйста, выберите тип проекта</p>
+          </div>
+
+          <!-- Comment -->
+          <div class="form-field">
+            <label for="field-comment" class="label-tag block mb-2">Комментарий</label>
+            <textarea
+              id="field-comment"
+              name="comment"
+              rows="4"
+              placeholder="Расскажите о поводе, пожеланиях, оттенках..."
+              class="w-full bg-transparent border border-[var(--color-border)] px-4 py-3.5 text-sm placeholder:text-[var(--color-fg-subtle)] focus:outline-none focus:border-[var(--color-fg)] transition-colors duration-200 resize-none"
+            ></textarea>
+          </div>
+
+          <!-- Privacy -->
+          <div class="flex items-start gap-3">
+            <div class="relative mt-0.5 shrink-0">
+              <input
+                id="field-privacy"
+                name="privacy"
+                type="checkbox"
+                required
+                class="w-4 h-4 appearance-none border border-[var(--color-border)] bg-transparent checked:bg-[var(--color-fg)] checked:border-[var(--color-fg)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] cursor-pointer transition-colors duration-200"
+              />
+              <svg class="absolute inset-0 w-4 h-4 pointer-events-none opacity-0 privacy-check" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2" aria-hidden="true">
+                <polyline points="3,8 6,11 13,4"/>
+              </svg>
+            </div>
+            <label for="field-privacy" class="text-xs text-[var(--color-fg-muted)] leading-relaxed cursor-pointer">
+              Я согласен(а) с <a href="/privacy" class="underline hover:text-[var(--color-fg)] transition-colors duration-200">политикой конфиденциальности</a>
+            </label>
+          </div>
+          <p id="privacy-error" class="hidden text-xs text-red-500 -mt-3">Необходимо ваше согласие</p>
+
+          <!-- Submit -->
+          <Button
+            type="submit"
+            variant="submit"
+            size="lg"
+            fullWidth={true}
+            id="submit-btn"
+            class="mt-2"
+          >
+            <span id="btn-text">Отправить заявку</span>
+            <svg id="btn-spinner" class="hidden w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2a10 10 0 1 0 10 10" stroke-linecap="round"/>
+            </svg>
+          </Button>
+        </form>
+
+        <!-- Success state -->
+        <div
+          id="form-success"
+          class="hidden flex-col items-start gap-4 p-10 bg-[var(--color-bg-warm)] border border-[var(--color-border)]"
+        >
+          <div class="w-10 h-10 border border-[var(--color-accent)] flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--color-accent)" stroke-width="1.5">
+              <polyline points="2,8 6,12 14,4"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-light tracking-tight">Заявка принята</h3>
+          <p class="text-[var(--color-fg-muted)] text-sm leading-relaxed">
+            Мы свяжемся с вами в ближайшее время. Обычно отвечаем в течение одного рабочего дня.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const successEl = document.getElementById('form-success')!;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const btnText = document.getElementById('btn-text')!;
+  const btnSpinner = document.getElementById('btn-spinner')!;
+  const privacyError = document.getElementById('privacy-error')!;
+  const privacyCheck = document.getElementById('field-privacy') as HTMLInputElement;
+
+  // Checkbox visual
+  privacyCheck.addEventListener('change', () => {
+    const checkmark = privacyCheck.nextElementSibling as SVGElement;
+    checkmark.style.opacity = privacyCheck.checked ? '1' : '0';
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    let valid = true;
+
+    // Validate required fields
+    const requiredFields = form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[required]');
+    requiredFields.forEach((field) => {
+      const errorEl = field.closest('.form-field')?.querySelector('.field-error') as HTMLElement | null;
+      if (!field.value.trim() || (field.tagName === 'SELECT' && !field.value)) {
+        valid = false;
+        field.style.borderColor = '#ef4444';
+        if (errorEl) errorEl.classList.remove('hidden');
+      } else {
+        field.style.borderColor = '';
+        if (errorEl) errorEl.classList.add('hidden');
+      }
+    });
+
+    if (!privacyCheck.checked) {
+      valid = false;
+      privacyError.classList.remove('hidden');
+    } else {
+      privacyError.classList.add('hidden');
+    }
+
+    if (!valid) return;
+
+    // Loading state
+    submitBtn.disabled = true;
+    btnText.textContent = 'Отправка...';
+    btnSpinner.classList.remove('hidden');
+
+    // Simulate API call (replace with real fetch)
+    await new Promise((r) => setTimeout(r, 1500));
+
+    form.style.display = 'none';
+    successEl.classList.remove('hidden');
+    successEl.classList.add('flex');
+  });
+
+  // Clear errors on input
+  form.querySelectorAll('input, select, textarea').forEach((field) => {
+    field.addEventListener('input', () => {
+      (field as HTMLElement).style.borderColor = '';
+      const errorEl = field.closest('.form-field')?.querySelector('.field-error') as HTMLElement | null;
+      if (errorEl) errorEl.classList.add('hidden');
+    });
+  });
+</script>
