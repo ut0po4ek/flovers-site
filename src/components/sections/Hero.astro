@@ -1,0 +1,222 @@
+---
+import Button from '../ui/Button.astro';
+---
+
+<section
+  id="hero"
+  class="hero-section relative overflow-hidden"
+  aria-label="Главный экран"
+>
+  <div class="hero-top">
+    <div class="hero-photo-bg" aria-hidden="true">
+      <img
+        src="https://images.unsplash.com/photo-1495841674375-6f5de87aab5c?w=1600&q=80&auto=format&fit=crop"
+        alt=""
+        width="1600"
+        height="1067"
+        fetchpriority="high"
+        loading="eager"
+        decoding="sync"
+        class="hero-bg-img"
+      />
+      <div class="hero-photo-overlay" aria-hidden="true"></div>
+    </div>
+
+    <div class="container-site hero-content">
+      <div class="hero-eyebrow">
+        <span class="label-tag" style="color: var(--glass-hero-text-m);">Авторская флористика · Москва</span>
+      </div>
+
+      <h1 class="hero-title" aria-label="Создаём любовь через цветы">
+        <span class="hero-line-wrap" aria-hidden="true">
+          <span class="hero-line hero-line-1">Создаём</span>
+        </span>
+        <span class="hero-line-wrap" aria-hidden="true">
+          <span class="hero-line hero-line-2"><em class="hero-em">любовь</em></span>
+        </span>
+        <span class="hero-line-wrap" aria-hidden="true">
+          <span class="hero-line hero-line-3">через цветы</span>
+        </span>
+      </h1>
+
+      <p class="hero-sub">
+        Авторские букеты, сезонные композиции<br class="hidden md:block" />
+        и доставка цветов для важных моментов.
+      </p>
+
+      <div class="hero-btns">
+        <Button href="/catalog" variant="accent" size="md">
+          Перейти в каталог
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <line x1="0" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/>
+          </svg>
+        </Button>
+        <Button href="/#contacts" variant="secondary" size="md">Собрать букет</Button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="container-site hero-bottom-inner">
+      <div class="hero-bottom-text">
+        <p class="hero-bottom-tagline">
+          Мы выращиваем цветы с любовью и вниманием, специально для вас. Трепетно относимся к каждому букету.
+        </p>
+      </div>
+      <div class="hero-photos" aria-hidden="true">
+        <div class="hero-photo-card hero-photo-card-1">
+          <img src="https://images.unsplash.com/photo-1490750967868-88df5691cc26?w=600&q=75&auto=format&fit=crop" alt="" width="600" height="800" loading="lazy" decoding="async" class="hero-photo-img" />
+        </div>
+        <div class="hero-photo-card hero-photo-card-2">
+          <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=600&q=75&auto=format&fit=crop" alt="" width="600" height="800" loading="lazy" decoding="async" class="hero-photo-img" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-section { display: flex; flex-direction: column; }
+
+  .hero-top {
+    position: relative;
+    min-height: 70vh;
+    min-height: 70svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background-color: #101915;
+    overflow: hidden;
+  }
+  :global([data-theme="light"]) .hero-top { background-color: #eef4ef; }
+
+  .hero-photo-bg { position: absolute; inset: 0; z-index: 0; }
+
+  .hero-bg-img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center 30%;
+    display: block;
+    opacity: 0; transform: scale(1.04);
+    transition: opacity 1.4s cubic-bezier(0.16,1,0.3,1) 0.1s, transform 1.8s cubic-bezier(0.16,1,0.3,1) 0.1s;
+  }
+
+  .hero-photo-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(10,20,14,0.45) 0%, rgba(10,20,14,0.15) 40%, rgba(10,20,14,0.70) 100%);
+  }
+  :global([data-theme="light"]) .hero-photo-overlay {
+    background: linear-gradient(to bottom, rgba(238,244,239,0.30) 0%, rgba(238,244,239,0.05) 40%, rgba(238,244,239,0.55) 100%);
+  }
+
+  .hero-content { position: relative; z-index: 10; padding-top: 7rem; padding-bottom: 3rem; }
+
+  .hero-eyebrow {
+    margin-bottom: 1.5rem; opacity: 0; transform: translateY(0.5rem);
+    transition: opacity 0.8s var(--ease-out) 0.3s, transform 0.8s var(--ease-out) 0.3s;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300; font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 1.05; letter-spacing: -0.01em;
+    color: #fff4ee; margin: 0 0 1.5rem; max-width: 16ch;
+  }
+  :global([data-theme="light"]) .hero-title { color: #261818; }
+
+  .hero-em { font-style: italic; color: #f4b3d2; }
+  :global([data-theme="light"]) .hero-em { color: #8a2f48; }
+
+  .hero-line-wrap { display: block; overflow: hidden; }
+  .hero-line {
+    display: block; transform: translateY(110%); opacity: 0;
+    transition: transform 1s var(--ease-out), opacity 0.8s var(--ease-out);
+  }
+  .hero-line-1 { transition-delay: 0.45s; }
+  .hero-line-2 { transition-delay: 0.60s; }
+  .hero-line-3 { transition-delay: 0.75s; }
+
+  .hero-sub {
+    color: rgba(255,244,238,0.72); font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+    line-height: 1.7; margin: 0 0 2.5rem; max-width: 38ch;
+    opacity: 0; transform: translateY(1rem);
+    transition: opacity 0.9s var(--ease-out) 0.9s, transform 0.9s var(--ease-out) 0.9s;
+  }
+  :global([data-theme="light"]) .hero-sub { color: rgba(38,24,24,0.68); }
+
+  .hero-btns {
+    display: flex; flex-wrap: wrap; gap: 0.75rem;
+    opacity: 0; transform: translateY(1rem);
+    transition: opacity 0.9s var(--ease-out) 1.05s, transform 0.9s var(--ease-out) 1.05s;
+  }
+
+  .hero-bottom {
+    background-color: #5a1f32;
+    transform: translateY(2rem); opacity: 0;
+    transition: opacity 0.9s var(--ease-out) 0.15s, transform 0.9s var(--ease-out) 0.15s;
+  }
+  :global([data-theme="light"]) .hero-bottom { background-color: #f3e8e1; }
+
+  .hero-bottom-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 2rem; padding-top: 2rem; padding-bottom: 2rem;
+  }
+
+  .hero-bottom-text { flex: 1; max-width: 38ch; }
+  .hero-bottom-tagline {
+    font-size: 0.8125rem; line-height: 1.65;
+    color: rgba(255,244,238,0.72); margin: 0;
+  }
+  :global([data-theme="light"]) .hero-bottom-tagline { color: rgba(38,24,24,0.68); }
+
+  .hero-photos {
+    display: flex; gap: 0.75rem; flex-shrink: 0;
+    opacity: 0; transition: opacity 0.9s var(--ease-out) 0.3s;
+  }
+  .hero-photo-card {
+    width: 90px; height: 120px; border-radius: 8px;
+    overflow: hidden; flex-shrink: 0;
+  }
+  .hero-photo-card-1 { transition-delay: 0.2s; }
+  .hero-photo-card-2 { transition-delay: 0.35s; }
+  .hero-photo-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .hero-animate .hero-line      { transform: translateY(0); opacity: 1; }
+  .hero-animate .hero-eyebrow   { opacity: 1; transform: translateY(0); }
+  .hero-animate .hero-sub       { opacity: 1; transform: translateY(0); }
+  .hero-animate .hero-btns      { opacity: 1; transform: translateY(0); }
+  .hero-animate .hero-bottom    { opacity: 1; transform: translateY(0); }
+  .hero-animate .hero-photos    { opacity: 1; }
+  .hero-animate .hero-bg-img    { opacity: 1; transform: scale(1); }
+
+  @media (max-width: 640px) {
+    .hero-title { font-size: clamp(2.75rem, 12vw, 4rem); }
+    .hero-bottom-inner { flex-direction: column; align-items: flex-start; }
+    .hero-photos { width: 100%; justify-content: flex-start; }
+    .hero-photo-card { width: 80px; height: 105px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-line, .hero-eyebrow, .hero-sub, .hero-btns,
+    .hero-bottom, .hero-photos, .hero-bg-img {
+      opacity: 1 !important; transform: none !important; transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  function startHeroReveal() {
+    const section = document.getElementById('hero');
+    if (!section) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      section.classList.add('hero-animate');
+      return;
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => section.classList.add('hero-animate')));
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startHeroReveal);
+  } else {
+    startHeroReveal();
+  }
+  document.addEventListener('astro:page-load', startHeroReveal);
+</script>
