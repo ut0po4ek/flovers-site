@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { siteConfig } from '../config/site';
+---
+
+<BaseLayout
+  title={`Политика конфиденциальности — ${siteConfig.name}`}
+  description="Политика конфиденциальности FLOVERS"
+>
+  <Header />
+  <main class="pt-32 pb-20">
+    <div class="container-site max-w-2xl">
+      <h1
+        style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; letter-spacing: -0.01em; margin-bottom: 2rem;"
+      >
+        Политика конфиденциальности
+      </h1>
+      <p class="text-[var(--color-fg-muted)] leading-relaxed">
+        Мы уважаем вашу конфиденциальность. Данные, которые вы оставляете в форме заказа,
+        используются исключительно для обработки вашего заказа и связи с вами.
+        Мы не передаём ваши данные третьим лицам.
+      </p>
+      <p class="text-[var(--color-fg-muted)] leading-relaxed mt-4">
+        По вопросам: <a href={`mailto:${siteConfig.contacts.email}`} class="underline">{siteConfig.contacts.email}</a>
+      </p>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

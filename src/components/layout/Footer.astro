@@ -1,0 +1,108 @@
+---
+import { siteConfig } from '../../config/site';
+const navLinks = siteConfig.nav;
+---
+
+<style>
+  .footer-root {
+    --footer-text:       #f7f1e7;
+    --footer-text-muted: rgba(247, 241, 231, 0.65);
+    --footer-text-sub:   rgba(247, 241, 231, 0.42);
+    --footer-border:     rgba(247, 241, 231, 0.10);
+  }
+  .footer-brand { color: var(--footer-text); }
+  .footer-link-muted { color: var(--footer-text-muted); }
+  .footer-link-muted:hover { color: var(--footer-text); }
+  .footer-link-sub { color: var(--footer-text-sub); }
+  .footer-link-sub:hover { color: var(--footer-text); }
+  .footer-cta-btn {
+    border: 1px solid rgba(247, 241, 231, 0.30);
+    color: var(--footer-text);
+    transition: border-color 300ms ease, background 300ms ease, color 300ms ease;
+  }
+  .footer-cta-btn:hover {
+    border-color: var(--footer-text);
+    background: rgba(247, 241, 231, 0.10);
+  }
+  .footer-bottom-border { border-top: 1px solid var(--footer-border); }
+</style>
+
+<footer class="footer-root bg-[var(--color-bg-dark)]">
+  <div class="container-site py-16 md:py-20">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-8">
+      <!-- Brand -->
+      <div class="lg:col-span-1">
+        <a href="/" class="footer-brand text-sm font-medium tracking-[0.15em] uppercase block mb-4">
+          {siteConfig.name}
+        </a>
+        <p class="footer-link-muted text-sm leading-relaxed max-w-xs">
+          {siteConfig.footer.tagline}
+        </p>
+      </div>
+
+      <!-- Navigation -->
+      <div>
+        <p class="label-tag footer-link-sub mb-5">Навигация</p>
+        <nav aria-label="Навигация в подвале" class="flex flex-col gap-3">
+          {navLinks.map((link) => (
+            <a href={link.href} class="footer-link-muted text-sm transition-colors duration-200">
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+
+      <!-- Contacts -->
+      <div>
+        <p class="label-tag footer-link-sub mb-5">Контакты</p>
+        <div class="flex flex-col gap-3">
+          <a
+            href={`tel:${siteConfig.contacts.phone.replace(/[\s\-()]/g, '')}`}
+            class="footer-link-muted text-sm transition-colors duration-200"
+          >
+            {siteConfig.contacts.phone}
+          </a>
+          <a
+            href={`mailto:${siteConfig.contacts.email}`}
+            class="footer-link-muted text-sm transition-colors duration-200"
+          >
+            {siteConfig.contacts.email}
+          </a>
+          <p class="footer-link-muted text-sm">{siteConfig.contacts.address}</p>
+        </div>
+
+        <div class="flex gap-4 mt-6">
+          <a href={siteConfig.contacts.telegram} class="label-tag footer-link-sub transition-colors duration-200" aria-label="Telegram">TG</a>
+          <a href={siteConfig.contacts.whatsapp} class="label-tag footer-link-sub transition-colors duration-200" aria-label="WhatsApp">WA</a>
+          <a href={siteConfig.contacts.instagram} class="label-tag footer-link-sub transition-colors duration-200" aria-label="Instagram">IG</a>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div>
+        <p class="label-tag footer-link-sub mb-5">Заказать букет</p>
+        <p class="footer-link-muted text-sm mb-6 leading-relaxed">
+          {siteConfig.footer.ctaText}
+        </p>
+        <a
+          href={siteConfig.cta.href}
+          class="footer-cta-btn inline-flex items-center gap-2 px-5 py-2.5 text-xs font-medium tracking-widest uppercase"
+        >
+          {siteConfig.cta.label}
+        </a>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom-border mt-16 pt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <p class="footer-link-sub text-xs">
+        © {siteConfig.year} {siteConfig.name}. Все права защищены.
+      </p>
+      <div class="flex gap-6">
+        <a href={siteConfig.footer.privacyHref} class="footer-link-sub text-xs transition-colors duration-200">
+          Политика конфиденциальности
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

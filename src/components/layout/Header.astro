@@ -484,8 +484,8 @@ const navLinks = siteConfig.nav;
       themeMenuOpen = true;
       themeMenu!.classList.remove('hidden');
       themeBtn!.setAttribute('aria-expanded', 'true');
-      //const firstItem = themeMenu!.querySelector<HTMLElement>('[role="menuitem"]');
-      //firstItem?.focus();
+      const firstItem = themeMenu!.querySelector<HTMLElement>('[role="menuitem"]');
+      firstItem?.focus();
     }
 
     function closeThemeMenu() {
