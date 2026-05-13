@@ -220,6 +220,19 @@ const {
         });
       });
       document.addEventListener('astro:after-swap', () => {
+        // Astro ClientRouter replaces the <html> element on swap, losing
+        // classes set by the anti-flash inline script (.js, data-theme).
+        // Restore them so html:not(.js) guard doesn't override opacity:0.
+        const html = document.documentElement;
+        html.classList.add('js');
+        const savedTheme = (() => {
+          try { return localStorage.getItem('flovers-theme') || 'system'; } catch { return 'system'; }
+        })();
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const resolved = savedTheme === 'system' ? (prefersDark ? 'dark' : 'light') : savedTheme;
+        html.dataset.theme = resolved;
+        html.dataset.themePreference = savedTheme;
+
         if (!revealAfterTransition) return;
         window.clearTimeout(revealTimer);
         revealTimer = window.setTimeout(initRevealAfterViewTransition, 520);
